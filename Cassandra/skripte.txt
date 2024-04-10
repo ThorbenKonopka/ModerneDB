@@ -1,0 +1,16 @@
+CREATE KEYSPACE IF NOT EXISTS stundenplan WITH replication = {'class': 'NetworkTopologyStrategy', 'datacenter1': 3};
+USE stundenplan;
+
+CREATE TABLE IF NOT EXISTS dozent_termine(
+dozent text, 
+termin_id int, 
+datum date, 
+beginn time, 
+ende time, 
+PRIMARY KEY((dozent), termin_id)
+);
+
+INSERT INTO dozent_termine(dozent, termin_id, datum, beginn, ende) 
+VALUES('Koenigsmann', 1, '2020-05-04', '08:00:00', '16:00:00');
+
+SELECT * FROM dozent_termine;
