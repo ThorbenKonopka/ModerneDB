@@ -1,0 +1,184 @@
+\documentclass[11pt,a4paper]{article}
+
+
+\setlength{\parindent}{0pt}
+
+\makeatletter
+\renewcommand\section{\@startsection
+	{section}{1}{0mm}%			% name, ebene, einzug
+	{0pt}%				% vor-abstand
+	{24pt}%				% nach-abstand
+	{\bfseries\Large}%		% layout
+}
+\makeatother
+\makeatletter
+\renewcommand\subsection{\@startsection
+	{subsection}{2}{0mm}%			% name, ebene, einzug
+	{0pt}%				% vor-abstand
+	{12pt}%				% nach-abstand
+	{\bfseries\large}%		% layout
+}
+\makeatother
+\makeatletter
+\renewcommand\subsubsection{\@startsection
+	{subsubsection}{3}{0mm}%			% name, ebene, einzug
+	{0pt}%				% vor-abstand
+	{6pt}%				% nach-abstand
+	{\bfseries}%		% layout
+}
+\makeatother
+\makeatletter
+\renewcommand\paragraph{\@startsection
+	{paragraph}{4}{0mm}%			% name, ebene, einzug
+	{0pt}%				% vor-abstand
+	{6pt}%				% nach-abstand
+	{\bfseries}%		% layout
+}
+\makeatother
+
+\usepackage{plantuml}
+
+\usepackage[german]{babel}
+%\usepackage{germanb}
+
+%\usepackage{titling}
+\usepackage{scrextend}
+
+%\usepackage{listings}
+%\lstset{
+%	frame=trbl,
+%	language=Bash}
+
+\usepackage{icomma}
+
+\usepackage{graphicx}
+\graphicspath{ {./images/} }
+
+\usepackage{scrlayer-scrpage}
+\clearpairofpagestyles
+\ofoot{\pagemark}
+\ihead{\includegraphics[height=1cm]{itcLogo}}
+%\ohead{\normalfont{\headmark}}
+%\automark{section}
+
+\usepackage{tikz}
+\usetikzlibrary{er,positioning}
+
+%\usepackage{pgf-umlcd}
+
+\usepackage{svg}
+\svgpath{ {./images/} }
+
+\usepackage[left=3.0cm, right=2.5cm, top=3.0cm, bottom=2.5cm, footskip=1.3cm]{geometry}
+
+\usepackage{fontspec}
+\setmainfont{Arial}
+
+\sloppy
+
+\usepackage{setspace}
+\setstretch{1.3}
+
+\usepackage{hyperref}
+\hypersetup{
+	pdfborder={0 0 0},
+	bookmarks=false,
+	colorlinks=true,
+	linkcolor=[RGB]{0,110,199},
+	urlcolor=[RGB]{0,110,199}
+}
+
+%[toc, section=section, numberedsection=autolabel]
+\usepackage[toc, languages=german, nonumberlist, acronyms]{glossaries}
+\usepackage{glossaries-extra}
+
+\makenoidxglossaries
+
+\include{Glossar.tex}
+
+\title{Moderne DB Gruppe 1}
+\date{2024-04-15}
+\author{-}
+\begin{document}
+	\begin{titlepage}
+		\begin{center}
+			\vspace*{1cm}
+			
+			\Huge
+			\textbf{Moderne Datenbanken\\ Einführung verschiedener Datenbanksysteme}
+			
+			\vspace{0.5cm}
+			\LARGE
+			Dokumentation der Gruppenaufgaben
+			
+			\vspace{1.5cm}
+			
+			\textbf{Gruppe 1}
+			
+			\vspace{1.75cm}
+			
+			\vfill
+			%\includegraphics[height=2cm]{AdessoLogo}\\
+			%adesso SE
+			
+			\vspace{1.0cm}
+			%Eine Dokumentation um in das nächste Semester versetzt zu werden.
+			%A thesis presented for the degree of\\
+			%Doctor of Philosophy
+			
+			%\vspace{0.8cm}
+			\large
+			%\includegraphics[height=3cm]{AdessoLogo}
+			%\includegraphics[height=2.5cm]{ITCLogo}
+			\begin{tabular}{p{8cm}l}
+				\textbf{Hochschule:} & IT-Center Dortmund\\ 
+				&\\
+				\textbf{Prüfungsteilnehmer:} & Nils Thorben Konopka\\
+				& Wittener Straße 77\\
+				& 44149 Dortmund\\
+				&\\
+				& Lukas Meier\\
+				& Vormholzer Ring 50\\
+				& 58456 Witten\\
+				&\\
+				& Ivan Rodrigo Quiroz Galarza\\
+				& Ernst-Waldschmidt-Straße 7\\
+				& 44538 Lünen
+			\end{tabular}
+			
+			\vspace{2.0cm}
+			
+			\Large
+			%IT-Center Dortmund\\
+			%\vspace{0.8cm}
+			\vspace{0.20cm}
+			%In Zusammenarbeit mit:\\
+			%\includegraphics[height=3cm]{AdessoLogo}\\
+			Germany\\
+			05.04.2024 - 19.04.2024
+			
+		\end{center}
+	\end{titlepage}
+	
+	\newpage
+	
+	\setcounter{tocdepth}{2}
+	\setcounter{secnumdepth}{3}
+	\tableofcontents
+	
+	\newpage
+	
+	\section{Projekt}
+	% Hier soll unser Projekt beschrieben werden. Also, wie das ER-Modell aussieht, welche Anwendungsfälle es gibt etc. Also eine Zusammenfassung der Ergebnisse des letzten Semesters.
+	
+	\include{Redis.tex}
+	
+	\include{Cassandra.tex}
+	
+	\include{CouchDB.tex}
+	
+	\include{Neo4J.tex}
+	
+	\printnoidxglossaries
+	
+\end{document}
