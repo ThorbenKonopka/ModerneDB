@@ -1,7 +1,165 @@
 % !TeX root = Dokumentation.tex
 
+\clearpage
+
 \section{Cassandra}
-% Hier einmal kurz das Datenbanksystem ansich und die stärken bzw. anwendungsfälle beschreiben, in denen es sich am besten Benutzen lässt bzw. häufig eingesetzt wird.
+Cassandra ist eine NoSQL, linear-skalierende, ausfallsichere, spaltenorientierte Datenbank, die schnell und zuverlässig funktioniert, wenn das Datenmodell richtig entworfen wurde. 
+
+\vspace{6pt}
+
+Im Rahmen des Moduls Moderne Datenbanken haben wir Gruppenaufgaben zu Cassandra bekommen. Für diese werden die Lösungsideen und Aspekte dieser betrachtet und beschrieben. 
+
+\vspace{18pt}
 
 \subsection{Aufgabenstellung}
-% Bitte nicht einfach ein Foto von den Aufgabestellungen einfügen, sondern die Aufgabestellungen etwas abstrahieren und das schreiben, was letztendlich unsere Aufgabe gewesen ist. Bei vielen Aufgaben gabe es durch Königsmann im Nachhinein ergänzungen. DESHALB BITTE NICHT EINFACH STUMPF DIE FOLIE ABSCHREIBEN. Danke :D
+Jeder Gruppe wurden für Cassandra sechs Aufgaben gegeben. Diese sind den Folien zu entnehmen. Besagte Aufgaben wurden von Prof. Königsmann genauer spezifiziert und abgeändert. Wir haben die Aufgaben wie folgend verstanden:
+
+\begin{enumerate}
+	\item Ein paar Anwendungsfälle wählen, für die sich Cassandra gut eignet.
+	\item Die Tabellen auf eine geeignete\footnote{Wie eine gute Tabelle für Cassandra aussieht wird von Tyler Hobbs und Sebastian Sibl gut beschrieben.\newline Die Beiträge:\newline \href{https://www.datastax.com/blog/basic-rules-cassandra-data-modeling}{https://www.datastax.com/blog/basic-rules-cassandra-data-modeling} und\newline \href{https://www.freecodecamp.org/news/the-apache-cassandra-beginner-tutorial/}{https://www.freecodecamp.org/news/the-apache-cassandra-beginner-tutorial/}} Art und Weise designen. Diese Aufgabe wurde in zwei Teilaufgaben aufteilen. 
+	\begin{itemize}
+		\item Geeignete Partitionen und Cluster Columns wählen
+		\item Daten mehrmals schreiben um die Lesegeschwindigkeit zu erhöhen. (Redundanz einbauen)
+	\end{itemize}
+	\item Eine geeignete Methode wählen um Daten konsistent zu halten. Auf der Folie wird geschrieben, dass ein BATCH benutzt werden soll. 
+	\item Ein Einsatzszenario für TTL überlegen.
+	\item Die Performance von der Relationalen Datenbank zu Cassandra in den Ausgewählten Anwendungsfällen vergleichen.
+\end{enumerate}
+
+\newpage
+
+\subsection{Anwendungsfälle}
+Bevor Tabellen in Cassandra erzeugt werden können, muss bestimmt werden, welche Daten, in welchem Kontext abgefragt werden. Das ist nötig, weil sich die Tabellen in Cassandra auf einzelne Queries bzw. Anwendungsfälle beziehen und für diesen Anwendungsfall sehr performant sind. Wenn man In Cassandra versucht mit einer Tabelle mehrere Anwendungsfälle abzudecken, wird man recht wahrscheinlich performance Probleme bekommen. Es wurden zwei Anwendungsfälle gefunden, bei denen davon ausgegangen wird, dass sich Cassandra besonders gut eignet.
+
+\vspace{12pt}
+
+\subsubsection{Termine von Studenten}
+Ein Student möchte all seine Termine einsehen können. 
+Dafür sollen die folgenden Daten angezeigt werden. 
+Datum, Beginn, Ende, Modul-Bezeichnung, VorlesungsTyp(Übung etc...), Dozent und Teilnahmestatus.
+
+\vspace{12pt}
+
+\subsubsection{Termine von Dozenten}
+Ein Dozent möchte all seine Termine einsehen.
+Dafür sollen die folgenden Daten angezeigt werden. 
+Datum, Beginn, Ende, Modul-Bezeichnung und den Vorlesungs-Typ(Übung etc...).
+Der einfachhalt halber wird die Vertretung oder der Ausfall von Terminen nicht berücksichtigt. Dozent haben in diesem Projekt immer Zeit und sind unverwundbar, weshalb alle Termine immer stattfinden und auch niemals vertreten werden.
+
+%\vspace{18pt}
+\newpage
+
+\subsection{Tabellen}
+Beim designen von Cassandra Tabellen gibt es zwei Ziele, die auf jede Fall erfüllt sein sollen:
+\begin{itemize}
+	\item Die Daten müssen gleichmäßig über alle Knoten verteilt sein.
+	\item Beim Lesen muss von so wenig Partitionen, wie es geht gelesen werden.
+\end{itemize}
+Um diese beiden Ziele zu erfüllen ist es notwendig den PartionKey für die Tabelle richtig zu wählen.
+
+\vspace{12pt}
+
+\subsubsection{Termine von Studenten}
+Im ersten Anwendungsfall wird der Student als PartitionKey und der Termin als ClusterColumn benutzt.
+Wir gehe davon aus, dass ein Student ungefähr 60 Termine pro Semester hat. Nach zehn Semestern wären das ungefähr 600 Termine, die auf einem Knoten liegen würden. Das halten wir in Bezug auf das erste Ziel (die Datenverteilung) für akzeptable. Wenn auffallen sollte, dass die Daten nicht gleichmäßig verteilt werden, weil die Partitionen zu groß sind, könnte das Semester noch als PartionKey hinzugefügt werden. Dadurch müsste das System aber für jedes Semester eine andere Patition abfragen, was voraussichtlich die Performance verringert.
+
+\vspace{12pt}
+
+\subsubsection{Termine von Dozenten}
+Im zweiten Anwendungsfall wird davon ausgegangen, dass nur die Termine für zwei Semester pro Dozent in Cassandra persistiert werden. Der Dozent wird als PartitionKey und der Termin als ClusterColumn benutzt. Wir gehen davon aus, dass ein Dozent 300 Termine pro Semester hat. Bei zwei Semestern wären das 600 Termine, was wir in Bezug auf die Datenverteilung ebenfalls für akzeptable halten.
+
+\vspace{12pt}
+%\newpage
+
+\subsubsection{Datenmodel}
+Das Datenmodel der beiden Tabellen kann den folgenden Create-Statements entnommen werden.
+\begin{lstlisting}
+CREATE TABLE student_termine (student_id  int, termin_id int, datum date, beginn time, ende time, bezeichnung text, typ text, dozent text, teilnahmestatus text, PRIMARY KEY((student_id), termin_id));
+\end{lstlisting}
+\begin{lstlisting}
+CREATE TABLE dozent_termine (dozent_id  int, termin_id int, datum date, beginn time, ende time, bezeichnung text, typ text, PRIMARY KEY((dozent_id), termin_id));
+\end{lstlisting}
+
+\newpage
+%\vspace{18pt}
+
+\subsection{Schreib- und Leseoperationen}
+In Cassandra sind Schreib- und Leseoperationen ein wichtiges Thema und werden bei der Modellierung von Tabellen bedacht. Eine wichtige Rolle spielen Redundanzen, das Consistencylevel und die Konsistenz der Persistierten Daten.
+
+\vspace{12pt}
+
+\subsubsection{Redundanz}
+Diese beiden Tabellen sind redundant, weil im Kern die gleichen Termine persistiert werden. Diese Redundanz wird für deutlich schnelleres Lesen der Termine für Dozenten und Studenten in kauf genommen.
+
+\vspace{6pt}
+
+Durch die Redundanz müssen neue Termine in Cassandra an mehreren Stellen hinzugefügt werden. Die Anzahl der Schreiboperationen auf unterschiedliche Partitionen beträgt 1 (dozent) + Anzahl der Studenten in dem Termin. Wenn das Modul Moderne DB von 30 Studenten belegt wird, werden pro Termin 30 + 1 Schreiboperationen auf unterschiedlichen Partitionen durchgeführt. 
+
+\vspace{6pt}
+
+Die Redundanz ist ein gewünschter Handel, bei dem mehr Schreiboperationen für weniger Leseoperationen eingetauscht werden. Die Schreiboperationen sind in Cassandra deutlich schneller als Leseoperationen, weshalb Redundanzen in der Regel gewollt sind.
+
+\vspace{12pt}
+
+\subsubsection{Consistencylevel}
+Das Consistencylevel bei Cassandra beschreibt weniger eine Konsistenz, die man aus Relationalen Datenbanken kennt, sondern eher, wie sicher die Daten geschrieben/gelesen werden. Wenn ein Datensatz mit dem Consistencylevel ONE geschrieben wird, bedeutet das, dass der Datensatz auf min. einem Knoten hinzugefügt wurde. Das heißt aber nicht, dass wirklich nur auf einem Knoten geschrieben wurde. Das Consistencylevel gibt nur die Anzahl der Knoten an, die beim Lesen bzw. Schreiben mit einbezogen werden müssen. Die Daten werden trotzdem auf mehrere Knoten geschrieben und letztendlich auf allen Replikationsknoten verteilt. Beim Lesen werden basierend auf dem Consistencylevel eine unterschiedliche Anzahl von Knoten abgefragt. Bei ungleichen Daten wird der neueste Datenstand benutzt. 
+
+\vspace{6pt}
+
+Wichtig wird das Consistencylevel erst in extrem fällen, wenn z.B. während des Schreibvorgangs Knoten ausfallen, oder direkt gelesen wird, nachdem geschrieben wurde. Wenn gelesen wurde, bevor die Knoten genug Zeit hatten, die Daten an alle Replikationsknoten zu verteilen, kann es sein, dass ein Knoten Gelesen wird, der die neuen Daten noch gar nicht besitzt. In so einem Fall kann ein Höheres Consistencylevel wie z.B.: Quorum dafür sorgen, dass mit einer deutlich höheren Wahrscheinlichkeit, die richtigen Daten gelesen werden. Das sicherere Schreiben und Lesen kostet aber Performance (siehe CAP).
+
+\vspace{6pt}
+
+Wenn genug Zeit zwischen den Schreib- und Leseoperationen liegt, reicht ein geringes Consistencylevel aus. Bei unseren Anwendungsfällen gehen wir davon aus, dass einige Zeit (min. eine Nacht) zwischen dem Schreiben und dem Lesen der Termine besteht. Deshalb wird das Consistencylevel ONE sowohl für Schreib als auch für Leseoperationen ausreichen. Zudem werden die wirklich wichtigen Termine z.B.: Klausuren zusätzlich per E-Mail versendet.
+
+\vspace{12pt} 
+
+\subsubsection{Konsistenz}
+Bei redundanten Daten ist es notwendig darauf zu achten, dass die Daten konsistent persistiert werden. Dafür konnten wir zwei Ansätze identifizieren. Die einfachste Lösung ist ein BATCH. Ein BATCH ist eine Sammlung von Statements und Ähnelt einer Transaktion. Bei einem BATCH werden entweder alle Statements ausgeführt oder gar keins. Dadurch kann die Konsistenz der Daten sicher gestellt werden.
+
+\vspace{6pt}
+
+Es ist vorgesehen, dass Logged BATCH benutzt werden, damit die redundant gespeicherten Daten konsistent bleiben. Sollte es bei der Ausführung von dem BATCH zu einem Fehler kommen, muss eine Strategie angewendet werden, damit die Termine trotzdem persistiert werden oder damit auf den Fehler aufmerksam gemacht werden kann. Dabei gibt es zwei Ansätze: 
+
+\begin{enumerate}
+	\item Der Termin wird in Redis gespeichert und später wird versucht den Termin erneut hinzuzufügen. Das ist im größeren Kontext nur dann möglich, wenn der Termin nur dann in Redis gespeichert wird, wenn er nicht persistiert werden konnte. Das Ziel soll es nicht sein, alle Termine zu cachen und im Laufe der Zeit zu persistieren.
+	\item Es wird versucht den Termin erneut zu persistieren. Hierbei sollte die Anzahl der Versuche begrenzt werden. Sollte der Termin nicht persistiert werden können, ist es notwendig den Dozenten zu benachrichtigen.
+\end{enumerate}
+
+
+Die Lösung für die wir uns entschieden haben sieht eine Mischung aus beiden Ansätzen vor: Sollte ein Termin nicht persistiert werden können, wird er in Redis abgelegt. In Regelmäßigen Zeitabständen (z.B.: 30 min,) wird versucht den Termin zu persistieren. Es gibt drei Retries und wenn der Termin nicht persistiert werden kann, wird der Dozent und die Verwaltung darüber benachrichtigt.
+
+%\vspace{6pt}
+\newpage
+
+Das BatchStatement für das Hinzufügen von Daten folgt dem folgenden Schema.
+\begin{lstlisting}
+BEGIN BATCH
+INSERT INTO stundenplan.dozent_termine(dozent_id, termin_id, datum, beginn, ende, bezeichnung, typ) 
+VALUES(1, 1, '2024-04-15', '08:00:00', '15:30:00', 'Moderne DB', 'Vorlesung');
+
+INSERT INTO stundenplan.student_termine(student_id, termin_id, datum, beginn, ende, bezeichnung, typ, dozent) 
+VALUES(1, 1, '2024-04-15', '08:00:00', '15:30:00', 'Moderne DB', 'Vorlesung', 'Königsmann');
+
+INSERT INTO stundenplan.student_termine(student_id, termin_id, datum, beginn, ende, bezeichnung, typ, dozent) 
+VALUES(2, 1, '2024-04-15', '08:00:00', '15:30:00', 'Moderne DB', 'Vorlesung', 'Königsmann');
+
+INSERT INTO stundenplan.student_termine(student_id, termin_id, datum, beginn, ende, bezeichnung, typ, dozent) 
+VALUES(3, 1, '2024-04-15', '08:00:00', '15:30:00', 'Moderne DB', 'Vorlesung', 'Königsmann');
+
+APPLY BATCH;
+\end{lstlisting}
+
+\newpage
+
+\subsection{Löschen von Daten}
+Bei dem Löschvorgang wird von Cassandra ein Tombstone gesetzt. Dieser makiert einen Zeitpunkt in der zukunft, an dem etwas entfernt wird. Das ist notwendig, damit die von dem Tombstone makierten Daten von allen Knoten gleichzeitig gelöscht und nicht wieder zurück auf andere Knoten repliziert werden. Deshalb wird das makierte Objekt erst später gelöscht. Die standard Zeit dafür beträgt 864000 s = 14400 min = 240 h = 10 d. In dieser Zeit kann der Tombstone an alle Knoten, die betroffene Daten enthalten weiter gegeben werden. Obwohl die makierten Daten theoretisch noch da sind, verhindert der Tombstone, dass betroffene Daten abgefragt werden können. Siehe \href{https://cassandra.apache.org/doc/latest/cassandra/managing/operating/compaction/tombstones.html}{https://cassandra.apache.org/doc/latest/cassandra/managing/operating/compaction/tombstones.html}
+
+\vspace{6pt}
+
+Ein möglicher Anwendungsfall für das Löschen von Daten über TTL wäre bei uns das zwei Semester Limit bei den Terminen des Dozenten. Ein angelegter Termin könnte eine vordefinierte Lebenszeit von ungefähr einem Jahr haben.
+
+\newpage
+
+\subsection{Performance}
+%MYSQL schreiben

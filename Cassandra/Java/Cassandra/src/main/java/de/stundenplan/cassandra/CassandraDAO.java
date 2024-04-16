@@ -28,6 +28,12 @@ public class CassandraDAO {
 
     private final String keyspace = "stundenplan";
 
+    public void init() {
+        createKeyspace();
+        createDozentTermineTable();
+        createStudentTermineTable();
+    }
+
     public void createKeyspace() {
 
         String query = "CREATE KEYSPACE IF NOT EXISTS " + keyspace + " WITH replication = {" + "'class': 'NetworkTopologyStrategy', " + "'datacenter1': 3};";
@@ -56,26 +62,12 @@ public class CassandraDAO {
         batchStatement = batchStatement.addAll(simpleStatements);
         batchStatement = batchStatement.setKeyspace(keyspace);
         batchStatement = batchStatement.setConsistencyLevel(ConsistencyLevel.ALL);
-        long startTime = System.currentTimeMillis();
+        //long startTime = System.currentTimeMillis();
         ResultSet resultSet = CQL_SESSION.execute(batchStatement);
-        long endTime = System.currentTimeMillis();
-        System.out.println(resultSet.getExecutionInfo().getErrors().size());
-        System.out.println("It took only " + (endTime - startTime) + "ms :D");
-        System.out.println("Number of Statements executed: " + simpleStatements.size());
-
-        System.out.println("\n\n--------------------------------\n\n");
-        long startTime2 = System.currentTimeMillis();
-
-        for (SimpleStatement statement : simpleStatements) {
-            //CQL_SESSION.execute(statement);
-            CQL_SESSION.executeAsync(statement).whenComplete((asyncResultSet, throwable) -> {
-                System.out.println(asyncResultSet.getExecutionInfo().getStatement().getConsistencyLevel());
-                System.out.println("Die Statements haben " + (System.currentTimeMillis() - startTime2) + "ms gedauert :D");
-            });
-        }
-        long endTime2 = System.currentTimeMillis();
-        System.out.println("It took only " + (endTime2 - startTime2) + "ms :D");
-        System.out.println("Number of Statements executed: " + simpleStatements.size());
+        //long endTime = System.currentTimeMillis();
+//        System.out.println(resultSet.getExecutionInfo().getErrors().size());
+//        System.out.println("It took only " + (endTime - startTime) + "ms :D");
+//        System.out.println("Number of Statements executed: " + simpleStatements.size());
     }
 
     private Set<SimpleStatement> createTerminInsertStatements(Termin termin) {
@@ -138,8 +130,6 @@ public class CassandraDAO {
     }
 
     public void destroy() {
-        ResultSet resultSet = CQL_SESSION.execute("SELECT * FROM stundenplan.student_termine WHERE student_id = 22;");
-        resultSet.forEach(row -> System.out.println(row.getFormattedContents()));
         CQL_SESSION.close();
     }
 }

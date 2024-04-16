@@ -18,6 +18,25 @@ public class Termin {
     private String bezeichnung;
     private String typ;
     private String teilnahmestatus;
+    private int veranstaltungId;
+
+    private int modulId;
+
+    public int getModulId() {
+        return modulId;
+    }
+
+    public void setModulId(int modulId) {
+        this.modulId = modulId;
+    }
+
+    public int getVeranstaltungId() {
+        return veranstaltungId;
+    }
+
+    public void setVeranstaltungId(int veranstaltungId) {
+        this.veranstaltungId = veranstaltungId;
+    }
 
     public String getTeilnahmestatus() {
         return teilnahmestatus;
@@ -97,5 +116,21 @@ public class Termin {
 
     public void setTyp(String typ) {
         this.typ = typ;
+    }
+
+    @Override
+    public String toString() {
+        return "Termin{" +
+                "terminId=" + terminId +
+                ", dozentId=" + dozentId +
+                ", studenten=" + studenten +
+                ", dozent='" + dozent + '\'' +
+                ", datum=" + datum +
+                ", beginn=" + beginn +
+                ", ende=" + ende +
+                ", bezeichnung='" + bezeichnung + '\'' +
+                ", typ='" + typ + '\'' +
+                ", teilnahmestatus='" + teilnahmestatus + '\'' +
+                '}';
     }
 }
