@@ -2,6 +2,72 @@
 
 \section{Redis}
 % Hier einmal kurz das Datenbanksystem ansich und die stärken bzw. anwendungsfälle beschreiben, in denen es sich am besten Benutzen lässt bzw. häufig eingesetzt wird.
-
+Redis ist eine In-Memory-Datenbank, welche Daten in Form von von Key-Value-Paaren ablegt. Unterstützt werden dabei unter Anderem die Datentypen Strings, Listen, Sets, Hashes
+und sortierte Sets.\\
+Als In-Memory-Datenbank hält Redis die Daten im Arbeitsspeicher und persistiert nur in gewissen Zeitabständen, oder bei einem gezielten Aufruf der enstprechenden Funktion, auf die
+Festplatte. Aufgrund dieses Vorgehens verfügt Redis über eine hohe Geschwindigkeit beim Datenzugriff. Redis kann damit besonders dort glänzen, wo schnelle Lese- und
+Schreiboperationen vonnöten sind. Außerdem ist Redis durch die Key-Value-Architektur auch schemafrei.\\
+Allerdings benötigt Redis dementsprechend ausreichend Arbeitsspeicher und bei Ausfällen besteht ein hohes Risiko des Datenverlusts. Zudem müssen Dinge wie z.B. die Sicherstellung
+von Datenkonsistenz von einer übergeordneten Anwendung übernommen werden.
 \subsection{Aufgabenstellung}
 % Bitte nicht einfach ein Foto von den Aufgabestellungen einfügen, sondern die Aufgabestellungen etwas abstrahieren und das schreiben, was letztendlich unsere Aufgabe gewesen ist. Bei vielen Aufgaben gabe es durch Königsmann im Nachhinein ergänzungen. DESHALB BITTE NICHT EINFACH STUMPF DIE FOLIE ABSCHREIBEN. Danke :D
+Im Rahmen der Veranstaltung sollte ein Teilbereich, z.B. ein View, der im vorrigen Semester entworfenen relationalen Datenbank zur Verwaltung von Stundenplänen
+stattdessen in Redis umgesetzt werden. Darüber hinaus sollte die bestehende Lösung eine Erweiterung erhalten, welche sich zur Veranschaulichung der Vorteile von Redis
+eignet.
+
+\subsubsection{Umsetzung des Dozenten-Views}
+Zur Umsetzung in Redis wurde der Dozenten-View aus der relationalen Datenbank gewählt. Die Auswahl erfolgte, weil er semantisch gut abgrenzbar ist.\\
+Somit musste ein Weg gefunden werden, die in dieser SQL-Abfrage enthaltenen Daten in Redis abzubilden:\\
+TODO: Formatieren\\
+\begin{verbatim}
+ USE `Stundenplan`;
+ CREATE VIEW dozentView AS
+ SELECT modul.name AS Modul, veranstaltung.veranstaltungid, veranstaltung.typ,
+dozent.name AS Dozent, termin.datum, termin.beginn AS Start, termin.ende AS Ende FROM Termin termin
+ JOIN Veranstaltung veranstaltung ON veranstaltung.veranstaltungId = termin.veranstaltungId
+ JOIN Dozent dozent ON dozent.dozentId = veranstaltung.dozentId
+ JOIN Modul modul ON modul.modulId = veranstaltung.modulId;
+\end{verbatim}
+Dieser View enthält alle Informationen, die mit einem Termin zusammenhängen. Die Termin-Entität ist die zentrale Entität der relationalen Datenbank, enthält jedoch
+selbst zunächst kaum semantische Informationen. Über die Joins werden die Tupel so zusammengesetzt, dass für jeden Termin ein gesammter Datensatz entsteht.
+\newline
+Da Redis auf Key-Value-Paaren aufbaut und keine komplexen Abfragen unterstützt und zudem Redundanzen im Gegensatz zu relationalen Datenmodellen hier
+kein Problem darstellen, wurde entschieden, dass der komplette View als Menge von Hashes in Redis dargestellt werden kann.
+Als Identifikator erhält jeder Hash eine Kombination aus einem Modulkürzel, dem Jahrgang und dem Datum, z.B. "iba23-011023" für den Termin zu
+Internetbasierte Anwendungen des Jahrgangs 23 am 1. Oktober 2023.
+Ein ganzer Datensatz würde dann so eingefügt werden:
+HSET iba23-011023 id "iba23-011023" dozentName "Anna Müller" veranstaltungTyp "Vorlesungen"
+semester "WS2023/2024" modulName "Internetbasierte Anwendungen"
+datum "01.10.2023" beginn "08:00" ende "10:00" teilnehmer "iba23T" jahrgang 23\\
+Damit sind alle Informationen des Views in einem Hash abgebildet.
+Das er Key "teilnehmer" ist hierbei dafür da, um über den ursprünglichen View hinausgehend auch noch die Teilnehmerliste nachzuhalten. Dies wurde in der relationalen
+Datenbank von einer stored function erledigt. Der Value gibt den Bezeichner des Hashes an, in welchem die Teilnehmerliste für diese Veranstaltung hinterlegt ist und besteht
+aus dem Modulkürzel, an welches ein T angehangen wird.
+So sieht eine solche Teilnehmerliste aus:\\
+HSET iba23T id "iba23T" "Bubi Blauschuh" "Krank" "Thomas Koenigsmann" "Krank" "Maria Mandarina" "Entschuldigt" "Katrin Kleeblatt" "unentschuldigt"\\
+So kann nicht nur der View umgesetzt, sondern auch Informationen nachgehalten werden, die ursprünlich eng mit diesem verwoben waren.
+Zur besseren Handhabung dieser neuen Lösung wurde  ein Hash mit den Metadaten eingebaut, welcher das Kürzelschema zu der Datenbank enthält, falls man es nachschlagen muss:\\
+HSET meta uebung "<modulkuerzel>U<datum>" teilnehmerliste "<modulkuerzel>T" abfrage "<modulkuerzel>Abfrage"\\
+Hier sieht man zum Beispiel, dass die Teilnehmerliste zu einer Veanstaltung immer in einem Hash finden kann, welcher aus dem jeweiligen
+Modulkürzel gefolgt von einem T besteht.\\
+Die Modulkürzel wiederum sind in der Modulkürzel-Map gespeichert:\\
+HSET modulkuerzel "Internetbasierte Anwendungen" "iba"\\
+\subsubsection{Erweiterung des Lösung}
+Als Teil der Aufgabenstellung sollten auch Erweiterungen zu der ursprünglichen Lösung eingebaut werden.
+Hier wurden zwei Erweiterungen vorgenommen. Beide basieren auf dem Umstand, dass in vielen Modulen des ITC die Möglichkeit besteht an Übungen teilzunehmen.
+Als erstes wurde ein Hash angelegt, in welchem eingetragen wird, ob ein Student an dem jeweiligen Termin seine Übungsaufgaben abgegeben hat:\\
+HSET iba23U-011023 id "iba23" "Bubi Blauschuh" "Nicht abgegeben" "Thomas Koenigsmann" 10 "Maria Mandarina" "Nicht abgegeben" "Katrin Kleeblatt" 5\\
+Manche Dozenten am ITC gehen bei den Übungen nicht anhand von Meldungen, sondern anhand einer Liste vor, wer am längsten nicht aufgerufen wurde.
+Hierzu eignet sich Redis besonders gut, da ein solcher Listen-Datentyp bereits besteht.
+Zum Beispiel könnte man nun eine Liste erstellen, zu der man alle Studenten einer Veranstaltung hinzufügt:\\
+LPush iba23Abfrage "Bubi Blauschuh" "Thomas Koenigsmann" "Maria Mandarina" "Katrin Kleeblatt"\\
+Wenn man nun wissen will, welcher Student als nächstes an der Reihe ist, kann man dies mit \\
+RPOP iba23Abfrage \\
+herausfinden.  In diesem Beispiel wäre das "Bubi Blauschuh". Anschließend wird dieser Student mit\\
+LPUSH iba23Abfrage "Bubi Blauschuh"\\
+wieder angehangen.
+
+
+
+
+
