@@ -36,18 +36,17 @@
 }
 \makeatother
 
-\usepackage{plantuml}
-
 \usepackage[german]{babel}
 %\usepackage{germanb}
 
 %\usepackage{titling}
 \usepackage{scrextend}
 
-%\usepackage{listings}
-%\lstset{
-%	frame=trbl,
-%	language=Bash}
+\usepackage{listings}
+\lstset{
+	frame=trbl,
+	language=SQL,
+	breaklines=true}
 
 \usepackage{icomma}
 
@@ -73,6 +72,7 @@
 
 \usepackage{fontspec}
 \setmainfont{Arial}
+%\setmainfont{Liberation Sans}
 
 \sloppy
 
@@ -89,7 +89,7 @@
 }
 
 %[toc, section=section, numberedsection=autolabel]
-\usepackage[toc, languages=german, nonumberlist, acronyms]{glossaries}
+\usepackage[toc, nonumberlist, acronyms]{glossaries}
 \usepackage{glossaries-extra}
 
 \makenoidxglossaries

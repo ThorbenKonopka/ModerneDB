@@ -1,0 +1,92 @@
+Bevor Teile des Schemas auf Cassandra umgezogen werden können müssen die Anwendungsfälle bestimmt werden. Das ist nötig, weil Sich die Tabellen in Cassandra auf einzelne Queries bzw. Anwendungsfälle beziehen. Deshalb ist es notwendig zu wissen, welche Daten, in welchen Kontext abgefragt werden sollen. 
+
+Für die beiden folgenden Anwendungsfälle sollen Teile des Datenbankschemas auf Cassandra umgezogen werden:
+
+Ein Student möchte all seine Termine einsehen können. 
+Dafür sollen die folgenden Daten angezeigt werden. 
+Datum, Beginn, Ende, Modul-Bezeichnung, VorlesungsTyp(Übung etc...), Dozent und Teilnahmestatus.
+
+Ein Dozent möchte all seine Termine einsehen.
+Dafür sollen die folgenden Daten angezeigt werden. 
+Datum, Beginn, Ende, Modul-Bezeichnung und den Vorlesungs-Typ(Übung etc...).
+Der einfachhalt halber wird die Vertretung oder der Ausfall von Terminen nicht berücksichtigt. Dozent haben in diesem Projekt immer Zeit und sind unverwundbar, weshalb alle Termine immer stattfinden und auch niemals vertreten werden.
+
+
+
+Beim designen von Cassandra Tabellen gibt es zwei Ziele, die auf jede Fall erfüllt sein sollen:
+Die Daten müssen gleichmäßig verteilt sein.
+Beim Lesen muss von so wenig partitionen, wie es geht gelesen werden.
+
+Um diese beiden Ziele zu erfüllen ist es notwendig den PartionKey für die Tabelle richtig zu wählen.
+
+Im ersten Anwendungsfall wird der Student als PartitionKey und der Termin als ClusterColumn benutzt.
+Wir gehe davon aus, dass ein Student ungefähr 60 Termine pro Semester hat. Nach zehn Semestern wären das ungefähr 600 Termine, die auf einem Knoten liegen würden. Das halten wir in Bezug auf das erste Ziel (die Datenverteilung) für akzeptable. Wenn auffallen sollte, dass die Daten nicht gleichmäßig verteilt werden, weil die Partitionen zu groß sind, könnte das Semester noch als PartionKey hinzugefügt werden. Dadurch müsste das System aber für jedes Semester eine andere Patition abfragen, was vorraussichtlich die Performance verringert. 
+
+Im zweiten Anwendungsfall wird davon ausgegangen, dass nur die Termine für zwei Semester pro dozent persistiert werden. Der Dozent wird als PartitionKey und der Termin als ClusterColumn benutzt. Wir gehen davon aus, dass ein Dozent 300 Termine pro Semester hat. Bei zwei Semestern wären das 600 Termine, was wir in Bezug auf die Datenverteilung ebenfalls für akzeptable halten.
+
+
+Diese beiden Tabellen sind redundant, weil im Kern die gleichen Termine persistiert werden. Diese Redundanz wird für deutlich schnelleres Lesen der Termine für Dozenten und Studenten in kauf genommen. 
+
+Die beiden Cassandra Tabellen sehen wie folgend aus. (Als Darstellung wird das Create Statement benutzt).
+CREATE TABLE student_termine (student_id  int, termin_id int, datum date, beginn time, ende time, bezeichnung text, typ text, dozent text, teilnahmestatus text, PRIMARY KEY((student_id), termin_id));
+
+CREATE TABLE dozent_termine (dozent_id  int, termin_id int, datum date, beginn time, ende time, bezeichnung text, typ text, PRIMARY KEY((dozent_id), termin_id));
+
+
+Durch die Redundanz müssen neue Termine in Cassandra an mehreren Stellen hinzugefügt werden. Die Anzahl der Schreiboperationen auf unterschiedliche Partitionen ist 1 (dozent) + Anzahl der Studenten in dem Termin. Wenn die Veranstalltung Moderne DB von 30 Studenten belegt wird, werden pro Termin 30 + 1 Schreiboperationen auf unterschiedlichen Partitionen durchgeführt. Dabei ist es wichtig, dass die Termine zuverlässig persistiert werden, weil sich sowohl Studenten als auch der Dozent auf die Richtigkeit der Daten verlassen müssen.
+
+Als Standart Consistency Level wird sowohl beim Schreiben als auch beim Lesen ONE benutzt. In diesem Fall ist aber eine höhere Konsistenz gewünscht. Deshalb wird für das Schreiben das ConsistencyLevel TWO benutzt. Weil die die wirklich wichtigen Termine, wie Klausur-Termine auch per Mail mitgeteilt werden. Für das Lesen wird das ConsistenzLevel ONE benutzt. 
+Zudem wird ein Logged Batch benutzt, damit die redundant gespeicherten Daten konsistent bleiben. Sollte es bei der Ausführung des Batches zu einem Fehler kommen, muss eine Strategie angewendet werden, damit die Termine trotzdem persistiert werden. Dabei gibt es zwei Ansätze: 
+
+1.
+Der Termin wird in einer InmemoryDB, wie z.B.: Redis gespeichert und später wird versucht den Termin erneut hinzuzufügen. Das ist im Größeren Kontext nur dann möglich, wenn Der Termin nur dann in der InmemoryDB espeichert wird, wenn er nicht persistiert werden konnte. Das Ziel soll es nicht sein alle Termine zu cachen und im Laufe der Zeit zu persistieren.
+
+2.
+Es wird versucht den Termin erneut zu persistieren. Hierbei könnte sollte die Anzahl der Versuche begrenzt werden. Sollte der Termin nicht persistiert werden können, ist es notwendig den Dozenten darüber inkenntniss zu setzen.
+
+Die Lösung für die wir uns entschieden haben sieht eine Mischung aus beiden Ansätzen vor: Sollte ein Termin nicht persistiert werden können, wird er in Redis abgelegt. In Regelmäßigen Zeitabständen (z.B.: 30 min,) wird versucht den Termin zu persistieren. Es gibt drei Retries und wenn der Termin nicht persistiert werden kann, wird der Dozent und die Verwaltung darüber benachrichtigt.
+
+
+Die folgenden Insert-Befehle können benutzt werden, um die Cassandra-Tabellen zu befüllen: (Die tatsächlich persistierten Werte sind nicht immer gleich)
+
+BEGIN BATCH
+INSERT INTO stundenplan.dozent_termine(dozent_id, termin_id, datum, beginn, ende, bezeichnung, typ) 
+VALUES(1, 1, '2024-04-15', '08:00:00', '15:30:00', 'Moderne DB', 'Vorlesung');
+
+INSERT INTO stundenplan.student_termine(student_id, termin_id, datum, beginn, ende, bezeichnung, typ, dozent) 
+VALUES(1, 1, '2024-04-15', '08:00:00', '15:30:00', 'Moderne DB', 'Vorlesung', 'Königsmann');
+
+INSERT INTO stundenplan.student_termine(student_id, termin_id, datum, beginn, ende, bezeichnung, typ, dozent) 
+VALUES(2, 1, '2024-04-15', '08:00:00', '15:30:00', 'Moderne DB', 'Vorlesung', 'Königsmann');
+
+INSERT INTO stundenplan.student_termine(student_id, termin_id, datum, beginn, ende, bezeichnung, typ, dozent) 
+VALUES(3, 1, '2024-04-15', '08:00:00', '15:30:00', 'Moderne DB', 'Vorlesung', 'Königsmann');
+
+APPLY BATCH;
+
+Die folgenden Delete-Befehle können benutzt werden, um einen Termin zu löschen: (Daten sind nicht immer gleich. Die Befehle stehen nur representativ für das Löschen von Terminen)
+
+BEGIN BATCH
+DELETE FROM dozent_termine WHERE dozent_id = 1 AND termin_id = 1;
+
+DELETE FROM student_termine WHERE student_id = 1 AND termin_id = 1;
+DELETE FROM student_termine WHERE student_id = 2 AND termin_id = 1;
+DELETE FROM student_termine WHERE student_id = 3 AND termin_id = 1;
+APPLY BATCH;
+
+Bei dem Löschvorgang wird von Cassandra ein Tombstone gesetzt. Dieser makiert einen Zeitpunkt in der zukunft, an dem etwas entfernt wird. Das ist notwendig, damit die von dem Tombstone makierten Daten von allen Knoten gleichzeitig gelöscht und nicht wieder zurück auf andere Knoten repliziert werden. Deshalb wird das makierte Objekt erst später gelöscht. Die standard Zeit dafür beträgt 864000 s = 14400 min = 240 h = 10 d. In dieser Zeit kann der Tombstone an alle Knoten, die betroffene Daten enthalten weiter gegeben werden. Obwohl die makierten Daten theoretisch noch da sind, verhindert der Tombstone, dass betroffene Daten abgefragt werden können. 
+Siehe https://cassandra.apache.org/doc/latest/cassandra/managing/operating/compaction/tombstones.html
+
+Als Default wird ein Tomstone erstellt. Ein möglicher Anwendungsfall für das Löschen von Daten wäre bei uns das zwei Semester Limit bei den Terminen des Dozenten. Wenn die Termine für das neue Semester feststehen, können die Termine des letzten Semesters (das älteste Semester) archiviert und aus der Datenbank entfernt werden. TTL soll dafür nicht benutzt werden, weil vermutet wird, dass eine Historie der Termine gehalten werden muss.
+
+
+
+Cassandra und MySql werden hauptsächlich in den beiden Punkten, Initiales einrichten (Alle notwendigen Tabellen möglichst schnell für Abfragen befüllen) und Abfragen mit einander verglichen. Für die intiale Befüllung der Tabellen wird vorrausgesetzt, dass beide Datenbanken soweit eingerichtet sind, dass die Daten mit einem einfachen Insert persistiert werden können. 
+Die benötigten Daten werden dem Datapump (siehe https://github.com/meierlqrITC/db_WS23_24/blob/dev/Dump/Dump20240124.sql) entnommen und für Cassandra aufgearbeitet. Beide Datenbanken werden Realitätsnah befüllt. 
+
+Bei MySQL Werden zusammenhängende Datensätze zusammen persistiert und es ist nicht erlaubt die Tabellen, um die es hauptsächlich geht nacheinander mit großen inserts zu befüllen. Die Tabellen, die aufgrund der Referenziellen integrität befüllt werden müssen aber keine Daten enthalten werden zwar in den Vergleich mit einbezogen, dürfen aber mit einem großen Insert befüllt werden. z.B.: die tabelle Studenten. In diese befinden sich keine Daten, die gebraucht werden aber es gibt eine Matchingtabelle, die auf diese tabelle verweist. Deshalb muss diese befüllt sein. 
+
+Bei Cassandra werden die tabellen mit dem vorgestellten insert-Batch befüllt. Also Termin für Termin. 
+
+
+Für die Abfrage müssen die zuvor vorgestellten Daten für die Anwendungsfälle genau so angezeigt werden können, wie beschrieben. Bei beiden Datenbanken müssen die gleichen Daten vorhanden sein. Die Daten dürfen sich allerdings in der Sortierung unterscheiden.
