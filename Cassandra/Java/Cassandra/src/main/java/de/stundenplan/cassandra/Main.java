@@ -29,20 +29,20 @@ public class Main {
 
         System.out.println("Mysql hat zum speichern: " + (endTimeMysql - startTimeMysql) + "ms gebraucht. :D");
 
-        CassandraDAO cassandraDAO = new CassandraDAO();
-        cassandraDAO.init();
-
-        long startTimeCassandra = System.currentTimeMillis();
-
-        for(Termin termin : termine) {
-            cassandraDAO.insertTermin(termin);
-        }
-
-        long endTimeCassandra = System.currentTimeMillis();
-
-        System.out.println("Cassandra hat zum speichern: " + (endTimeCassandra - startTimeCassandra) + "ms gebraucht. :D");
-
-        cassandraDAO.destroy();
+//        CassandraDAO cassandraDAO = new CassandraDAO();
+//        cassandraDAO.init();
+//
+//        long startTimeCassandra = System.currentTimeMillis();
+//
+//        for(Termin termin : termine) {
+//            cassandraDAO.insertTermin(termin);
+//        }
+//
+//        long endTimeCassandra = System.currentTimeMillis();
+//
+//        System.out.println("Cassandra hat zum speichern: " + (endTimeCassandra - startTimeCassandra) + "ms gebraucht. :D");
+//
+//        cassandraDAO.destroy();
         ConnectionPool.destroy();
     }
 

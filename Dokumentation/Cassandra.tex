@@ -230,14 +230,7 @@ JOIN Modul ON Veranstaltung.modulId = Modul.modulId
 WHERE Veranstaltung.dozentId = <dozentId>;
 \end{lstlisting} 
 \begin{lstlisting}
-SELECT Termin.datum, Termin.beginn, Termin.ende, Modul.name, Anwesenheit.fehlgrund, Veranstaltung.typ
-FROM Termin
-JOIN Veranstaltung ON Termin.veranstaltungId = Veranstaltung.veranstaltungId
-JOIN Modul ON Veranstaltung.modulId = Modul.modulId
-JOIN BelegteVeranstaltung ON Veranstaltung.veranstaltungId = BelegteVeranstaltung.veranstaltungId
-JOIN Dozent ON Veranstaltung.dozentId = Dozent.dozentId
-LEFT JOIN Anwesenheit ON BelegteVeranstaltung.matrikelnummer = Anwesenheit.matrikelnummer AND Termin.terminId = Anwesenheit.terminId;
-WHERE BelegteVeranstaltung.matrikelnummer = <matrikelnummer>; 
+SELECT DISTINCT Termin.datum, Termin.beginn, Termin.ende, Modul.name, Anwesenheit.fehlgrund, Veranstaltung.typ, Dozent.name FROM Termin JOIN Veranstaltung ON Termin.veranstaltungId = Veranstaltung.veranstaltungId JOIN Modul ON Veranstaltung.modulId = Modul.modulId JOIN BelegteVeranstaltung ON Veranstaltung.veranstaltungId = BelegteVeranstaltung.veranstaltungId JOIN Dozent ON Veranstaltung.dozentId = Dozent.dozentId LEFT JOIN Anwesenheit ON BelegteVeranstaltung.matrikelnummer = Anwesenheit.matrikelnummer AND Termin.terminId = Anwesenheit.terminId WHERE BelegteVeranstaltung.matrikelnummer = <matrikelnummer>; 
 \end{lstlisting} 
 
 \vspace{6pt}
