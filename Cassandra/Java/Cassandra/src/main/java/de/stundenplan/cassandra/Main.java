@@ -1,6 +1,8 @@
 package de.stundenplan.cassandra;
 
+import java.sql.Connection;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.Month;
@@ -13,9 +15,10 @@ public class Main {
     private static int modulId = 1;
     public static void main(String[] args) {
         ConnectionPool.init();
+
         Set<Termin> termine = new HashSet<>();
         termine.addAll(createTestdaten());
-        //termine.forEach(termin -> System.out.println(termin));
+        termine.forEach(termin -> System.out.println(termin));
 
         MySqlDAO mySqlDAO = new MySqlDAO();
         long startTimeMysql = System.currentTimeMillis();
@@ -29,21 +32,36 @@ public class Main {
 
         System.out.println("Mysql hat zum speichern: " + (endTimeMysql - startTimeMysql) + "ms gebraucht. :D");
 
-//        CassandraDAO cassandraDAO = new CassandraDAO();
-//        cassandraDAO.init();
-//
-//        long startTimeCassandra = System.currentTimeMillis();
-//
-//        for(Termin termin : termine) {
-//            cassandraDAO.insertTermin(termin);
-//        }
-//
-//        long endTimeCassandra = System.currentTimeMillis();
-//
-//        System.out.println("Cassandra hat zum speichern: " + (endTimeCassandra - startTimeCassandra) + "ms gebraucht. :D");
-//
-//        cassandraDAO.destroy();
+        MySqlDAO.queryStudentData();
+        MySqlDAO.queryDozentData();
+
         ConnectionPool.destroy();
+
+
+        CassandraDAO cassandraDAO = new CassandraDAO();
+        cassandraDAO.init();
+
+        try {
+            Thread.sleep(10000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+
+        long startTimeCassandra = System.currentTimeMillis();
+
+        for(Termin termin : termine) {
+            cassandraDAO.insertTermin(termin);
+        }
+
+        long endTimeCassandra = System.currentTimeMillis();
+
+        System.out.println("Cassandra hat zum speichern: " + (endTimeCassandra - startTimeCassandra) + "ms gebraucht. :D");
+
+
+        cassandraDAO.queryDozentData();
+        cassandraDAO.queryStudentData();
+
+        cassandraDAO.destroy();
     }
 
     private static Set<Termin> createTestdaten() {

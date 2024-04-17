@@ -167,7 +167,7 @@ Die Performance von Cassandra und unsere Relationalen Datenbank wird in zwei Kat
 \vspace{12pt}
 
 \subsubsection{Testdaten}
-Es werden 10 Jahrgänge mit jeweils 30 Studenten erzeugt. Es gibt insgesamt 7 Module. Für jedes Modul gibt es 10 Termine pro Jahrgang. Die Termine Unterteilen sich in die drei Veranstaltungen \textbf{Übungen}, \textbf{Verlesungen} und \textbf{Praktika} auf. Zudem wurden 11 Dozenten erzeugt.
+Es werden 10 Jahrgänge mit jeweils 30 Studenten erzeugt. Es gibt insgesamt 7 Module. Für jedes Modul gibt es 10 Termine pro Jahrgang. Die Termine Unterteilen sich in die drei Veranstaltungen \textbf{Übungen}, \textbf{Verlesungen} und \textbf{Praktika} auf. Zudem wurden 3 Dozenten erzeugt.
 
 \vspace{6pt}
 
@@ -184,24 +184,17 @@ In der MySQL Datenbank werden 22174 Datensätze geschrieben. Das Problem hier is
 \vspace{6pt}
 
 \paragraph{Ergebnisse}
-\begin{tabular}{|p{5cm}|p{5cm}|}
+\begin{tabular}{|p{6cm}|p{6cm}|}
 	\hline
 	\textbf{Cassandra} & \textbf{MySQL}\\
 	\hline
-	4500ms & 3500ms\\
-	\hline
-	\textbf{Cassandra} & \textbf{MySQL}\\
-	\hline
-	\textbf{Cassandra} & \textbf{MySQL}\\
-	\hline
-	\textbf{Cassandra} & \textbf{MySQL}\\
-	\hline
-	\textbf{Cassandra} & \textbf{MySQL}\\
+	2500 - 6000ms (meistens 3500 - 3800) & 3500 - 3850ms\\
 	\hline
 \end{tabular}
 
-Cassandra langsamer wegen Batches?\\
-TEST OHNE BATCHES
+\vspace{6pt}
+
+MySQL ist in der Schreibgeschwindigkeit sehr konsistent. Es ist davon auszugehen, dass Cassandra wegen den ganzen batches langsamer ist, als wenn man die Statements ohne Batch ausführen würde. Als Alternative zu dem 
 
 %\vspace{12pt}
 \newpage
@@ -240,14 +233,8 @@ SELECT DISTINCT Termin.datum, Termin.beginn, Termin.ende, Modul.name, Anwesenhei
 	\hline
 	\textbf{Cassandra} & \textbf{MySQL}\\
 	\hline
-	4500ms & 3500ms\\
+	Student: 3-5ms & 5-15ms\\
 	\hline
-	\textbf{Cassandra} & \textbf{MySQL}\\
-	\hline
-	\textbf{Cassandra} & \textbf{MySQL}\\
-	\hline
-	\textbf{Cassandra} & \textbf{MySQL}\\
-	\hline
-	\textbf{Cassandra} & \textbf{MySQL}\\
+	Dozent: 5-6ms & 3-6ms\\
 	\hline
 \end{tabular}

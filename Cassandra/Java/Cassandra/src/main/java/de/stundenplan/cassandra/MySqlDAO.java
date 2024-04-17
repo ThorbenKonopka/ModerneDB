@@ -202,4 +202,58 @@ public class MySqlDAO {
         connection.setAutoCommit(true);
     }
 
+    public static void queryStudentData() {
+        Connection connection = ConnectionPool.getConnectionPool().getRootConnection();
+        try(Statement statement = connection.createStatement()) {
+            long startTime = System.currentTimeMillis();
+            statement.execute("SELECT DISTINCT SQL_NO_CACHE Termin.datum, now(), Termin.beginn, Termin.ende, Modul.name, Anwesenheit.fehlgrund, Veranstaltung.typ, Dozent.name, now() FROM Termin JOIN Veranstaltung ON Termin.veranstaltungId = Veranstaltung.veranstaltungId JOIN Modul ON Veranstaltung.modulId = Modul.modulId JOIN BelegteVeranstaltung ON Veranstaltung.veranstaltungId = BelegteVeranstaltung.veranstaltungId JOIN Dozent ON Veranstaltung.dozentId = Dozent.dozentId LEFT JOIN Anwesenheit ON BelegteVeranstaltung.matrikelnummer = Anwesenheit.matrikelnummer AND Termin.terminId = Anwesenheit.terminId WHERE BelegteVeranstaltung.matrikelnummer = 22;");
+            long endTime = System.currentTimeMillis();
+            System.out.println("MySQL: Query Student hat " + (endTime - startTime) + "ms gedauert. :D");
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static void queryDozentData() {
+        Connection connection = ConnectionPool.getConnectionPool().getRootConnection();
+        try(Statement statement = connection.createStatement()) {
+            long startTime1 = System.currentTimeMillis();
+            statement.execute("SELECT SQL_NO_CACHE Termin.datum, Termin.beginn, Termin.ende, Modul.name, Veranstaltung.typ, now()\n" +
+                    "FROM Termin\n" +
+                    "JOIN Veranstaltung ON Termin.veranstaltungId = Veranstaltung.veranstaltungId\n" +
+                    "JOIN Modul ON Veranstaltung.modulId = Modul.modulId\n" +
+                    "WHERE Veranstaltung.dozentId = 1;");
+            long endTime1 = System.currentTimeMillis();
+            System.out.println("MySQL: Query Dozent1 hat " + (endTime1 - startTime1) + "ms gedauert. :D");
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        try(Statement statement = connection.createStatement()) {
+            long startTime = System.currentTimeMillis();
+            statement.execute("SELECT SQL_NO_CACHE Termin.datum, Termin.beginn, Termin.ende, Modul.name, Veranstaltung.typ, now()\n" +
+                    "FROM Termin\n" +
+                    "JOIN Veranstaltung ON Termin.veranstaltungId = Veranstaltung.veranstaltungId\n" +
+                    "JOIN Modul ON Veranstaltung.modulId = Modul.modulId\n" +
+                    "WHERE Veranstaltung.dozentId = 2;");
+            long endTime = System.currentTimeMillis();
+            System.out.println("MySQL: Query Dozent2 hat " + (endTime - startTime) + "ms gedauert. :D");
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        try(Statement statement = connection.createStatement()) {
+            long startTime = System.currentTimeMillis();
+            statement.execute("SELECT SQL_NO_CACHE Termin.datum, Termin.beginn, Termin.ende, Modul.name, Veranstaltung.typ, now()\n" +
+                    "FROM Termin\n" +
+                    "JOIN Veranstaltung ON Termin.veranstaltungId = Veranstaltung.veranstaltungId\n" +
+                    "JOIN Modul ON Veranstaltung.modulId = Modul.modulId\n" +
+                    "WHERE Veranstaltung.dozentId = 3;");
+            long endTime = System.currentTimeMillis();
+            System.out.println("MySQL: Query Dozent3 hat " + (endTime - startTime) + "ms gedauert. :D");
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 }

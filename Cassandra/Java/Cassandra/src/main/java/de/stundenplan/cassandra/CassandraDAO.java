@@ -61,7 +61,7 @@ public class CassandraDAO {
 
         batchStatement = batchStatement.addAll(simpleStatements);
         batchStatement = batchStatement.setKeyspace(keyspace);
-        batchStatement = batchStatement.setConsistencyLevel(ConsistencyLevel.ALL);
+        batchStatement = batchStatement.setConsistencyLevel(ConsistencyLevel.ONE);
         //long startTime = System.currentTimeMillis();
         ResultSet resultSet = CQL_SESSION.execute(batchStatement);
         //long endTime = System.currentTimeMillis();
@@ -105,7 +105,7 @@ public class CassandraDAO {
                 "'" + formattedStartTime + "'," +
                 "'" + formattedEndTime + "'," +
                 "'" + bezeichnung + "'," +
-                "'" + type + "');").setConsistencyLevel(ConsistencyLevel.ALL);
+                "'" + type + "');").setConsistencyLevel(ConsistencyLevel.ONE);
     }
 
     private Set<SimpleStatement> createTerminInsertForStudents(Set<Integer> studentIds, int terminId, String formattedDate, String formattedStartTime, String formattedEndTime, String bezeichnung, String type, String dozent) {
@@ -126,7 +126,36 @@ public class CassandraDAO {
                 "'" + formattedEndTime + "'," +
                 "'" + bezeichnung + "'," +
                 "'" + type + "'," +
-                "'" + dozent + "');").setConsistencyLevel(ConsistencyLevel.ALL);
+                "'" + dozent + "');").setConsistencyLevel(ConsistencyLevel.ONE);
+    }
+
+    public void queryStudentData() {
+        String query = "SELECT datum, beginn, ende, bezeichnung, typ, dozent, teilnahmestatus FROM stundenplan.student_termine WHERE student_id = 22";
+        long startTime = System.currentTimeMillis();
+        ResultSet resultSet = CQL_SESSION.execute(query);
+        long endTime = System.currentTimeMillis();
+        System.out.println("CASSANDRA: Query Student hat " + (endTime - startTime) + "ms gedauert. :D");
+    }
+
+    public void queryDozentData() {
+        String query = "SELECT datum, beginn, ende, bezeichnung, typ FROM stundenplan.dozent_termine WHERE dozent_id = 1";
+        long startTimeDozent1 = System.currentTimeMillis();
+        ResultSet resultSet1 = CQL_SESSION.execute(query);
+        long endTimeDozent1 = System.currentTimeMillis();
+
+        query = "SELECT datum, beginn, ende, bezeichnung, typ FROM stundenplan.dozent_termine WHERE dozent_id = 2";
+        long startTimeDozent2 = System.currentTimeMillis();
+        ResultSet resultSet2 = CQL_SESSION.execute(query);
+        long endTimeDozent2 = System.currentTimeMillis();
+
+        query = "SELECT datum, beginn, ende, bezeichnung, typ FROM stundenplan.dozent_termine WHERE dozent_id = 3";
+        long startTimeDozent3 = System.currentTimeMillis();
+        ResultSet resultSet3 = CQL_SESSION.execute(query);
+        long endTimeDozent3 = System.currentTimeMillis();
+        System.out.println("CASSANDRA: Query Dozent1 hat " + (endTimeDozent1 - startTimeDozent1) + "ms gedauert");
+        System.out.println("CASSANDRA: Query Dozent2 hat " + (endTimeDozent2 - startTimeDozent2) + "ms gedauert");
+        System.out.println("CASSANDRA: Query Dozent3 hat " + (endTimeDozent3 - startTimeDozent3) + "ms gedauert");
+        System.out.println("CASSANDRA: Durchschnitt Dozenten-Query: " + ((endTimeDozent3 - startTimeDozent1)/3) + "ms :D");
     }
 
     public void destroy() {
