@@ -82,7 +82,7 @@ public class Main {
         for(String modul : moduleSemester1) {
             int mId = modulId++;
             Random random = new Random();
-            int dozent = random.nextInt(11) + 1;
+            int dozent = random.nextInt(3) + 1;
             for(int i = 0; i < 4; i++) {
                 termine.add(createTermin(dozent, modul, "Vorlesungen", studenten, veranstalltungId, mId));
             }
@@ -120,7 +120,7 @@ public class Main {
         for(String modul : moduleSemester1) {
             int mId = modulId++;
             Random random = new Random();
-            int dozent = random.nextInt(11) + 1;
+            int dozent = random.nextInt(3) + 1;
             for(int i = 0; i < 4; i++) {
                 termine.add(createTermin(dozent, modul, "Vorlesungen", studenten, veranstalltungId, mId));
             }
@@ -158,7 +158,7 @@ public class Main {
         for(String modul : moduleSemester1) {
             int mId = modulId++;
             Random random = new Random();
-            int dozent = random.nextInt(11) + 1;
+            int dozent = random.nextInt(3) + 1;
             for(int i = 0; i < 4; i++) {
                 termine.add(createTermin(dozent, modul, "Vorlesungen", studenten, veranstalltungId, mId));
             }
@@ -196,7 +196,7 @@ public class Main {
         for(String modul : moduleSemester1) {
             int mId = modulId++;
             Random random = new Random();
-            int dozent = random.nextInt(11) + 1;
+            int dozent = random.nextInt(3) + 1;
             for(int i = 0; i < 4; i++) {
                 termine.add(createTermin(dozent, modul, "Vorlesungen", studenten, veranstalltungId, mId));
             }
@@ -234,7 +234,7 @@ public class Main {
         for(String modul : moduleSemester1) {
             int mId = modulId++;
             Random random = new Random();
-            int dozent = random.nextInt(11) + 1;
+            int dozent = random.nextInt(3) + 1;
             for(int i = 0; i < 4; i++) {
                 termine.add(createTermin(dozent, modul, "Vorlesungen", studenten, veranstalltungId, mId));
             }
@@ -272,7 +272,7 @@ public class Main {
         for(String modul : moduleSemester1) {
             int mId = modulId++;
             Random random = new Random();
-            int dozent = random.nextInt(11) + 1;
+            int dozent = random.nextInt(3) + 1;
             for(int i = 0; i < 4; i++) {
                 termine.add(createTermin(dozent, modul, "Vorlesungen", studenten, veranstalltungId, mId));
             }
@@ -310,7 +310,7 @@ public class Main {
         for(String modul : moduleSemester1) {
             int mId = modulId++;
             Random random = new Random();
-            int dozent = random.nextInt(11) + 1;
+            int dozent = random.nextInt(3) + 1;
             for(int i = 0; i < 4; i++) {
                 termine.add(createTermin(dozent, modul, "Vorlesungen", studenten, veranstalltungId, mId));
             }
@@ -348,7 +348,7 @@ public class Main {
         for(String modul : moduleSemester1) {
             int mId = modulId++;
             Random random = new Random();
-            int dozent = random.nextInt(11) + 1;
+            int dozent = random.nextInt(3) + 1;
             for(int i = 0; i < 4; i++) {
                 termine.add(createTermin(dozent, modul, "Vorlesungen", studenten, veranstalltungId, mId));
             }
@@ -386,7 +386,7 @@ public class Main {
         for(String modul : moduleSemester1) {
             int mId = modulId++;
             Random random = new Random();
-            int dozent = random.nextInt(11) + 1;
+            int dozent = random.nextInt(3) + 1;
             for(int i = 0; i < 4; i++) {
                 termine.add(createTermin(dozent, modul, "Vorlesungen", studenten, veranstalltungId, mId));
             }
@@ -424,7 +424,7 @@ public class Main {
         for(String modul : moduleSemester1) {
             int mId = modulId++;
             Random random = new Random();
-            int dozent = random.nextInt(11) + 1;
+            int dozent = random.nextInt(3) + 1;
             for(int i = 0; i < 4; i++) {
                 termine.add(createTermin(dozent, modul, "Vorlesungen", studenten, veranstalltungId, mId));
             }
@@ -444,7 +444,7 @@ public class Main {
     private static Termin createTermin(int dozentId, String modul, String typ, Set<Integer> studenten, int veranstaltungId, int modulId) {
         LocalTime beginn = LocalTime.of(8, 30);
         LocalTime ende = LocalTime.of(15, 45);
-        String[] dozenten = {"Thorben", "Lukas", "Koenigsmann", "Max", "David", "Lisa", "Stefan", "Daniel", "Kaktus", "XE64", "TEE"};
+        String[] dozenten = {"Thorben", "Lukas", "Koenigsmann"};
 
         Termin termin = new Termin();
         termin.setTerminId(terminId++);

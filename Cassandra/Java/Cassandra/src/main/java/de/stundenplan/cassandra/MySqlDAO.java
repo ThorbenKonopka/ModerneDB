@@ -47,15 +47,7 @@ public class MySqlDAO {
             statement.execute("INSERT INTO Dozent(dozentId, name, vorname)" +
                     "VALUES (1, 'Thorben', 'Thorben')," +
                     "(2, 'Lukas', 'Lukas')," +
-                    "(3, 'Koenigsmann', 'Koenigsmann')," +
-                    "(4, 'Max', 'Max')," +
-                    "(5, 'David', 'David')," +
-                    "(6, 'Lisa', 'Lisa')," +
-                    "(7, 'Stefan', 'Stefan')," +
-                    "(8, 'Daniel', 'Daniel')," +
-                    "(9, 'Kaktus', 'Kaktus')," +
-                    "(10, 'XE64', 'XE64')," +
-                    "(11, 'TEE', 'TEE');");
+                    "(3, 'Koenigsmann', 'Koenigsmann');");
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

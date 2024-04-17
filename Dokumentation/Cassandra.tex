@@ -162,4 +162,99 @@ Ein möglicher Anwendungsfall für das Löschen von Daten über TTL wäre bei un
 \newpage
 
 \subsection{Performance}
-%MYSQL schreiben
+Die Performance von Cassandra und unsere Relationalen Datenbank wird in zwei Kategorien getestet. Beim initialen befüllen der Datenbanken mit Testdaten und bei der Ausführung der Anwendungsfälle.
+
+\vspace{12pt}
+
+\subsubsection{Testdaten}
+Es werden 10 Jahrgänge mit jeweils 30 Studenten erzeugt. Es gibt insgesamt 7 Module. Für jedes Modul gibt es 10 Termine pro Jahrgang. Die Termine Unterteilen sich in die drei Veranstaltungen \textbf{Übungen}, \textbf{Verlesungen} und \textbf{Praktika} auf. Zudem wurden 11 Dozenten erzeugt.
+
+\vspace{6pt}
+
+Bei der Persistierung von den Testdaten war es wichtig, dass die Testdaten realitätsnah gespeichert wurden. Das bedeutet, dass Für Cassandra das bereits Vorgestellte Batch benutzt wird um Termine hinzuzufügen. Bei MySQL wird darauf geachtet, dass die einzelnen Termine ebenfalls in einer eignen Transaktion in der Datenbank persistiert werden.
+
+\vspace{6pt}
+
+Es gibt insgesamt 300 Studenten, die jeweils 70 Termine haben. In Cassandra werden in der Studenten-Tabelle also 21000 Datensätze geschrieben. In die Dozenten Tabelle werden 700 Termine geschrieben.
+
+\vspace{6pt}
+
+In der MySQL Datenbank werden 22174 Datensätze geschrieben. Das Problem hier ist die referentielle Integrität. Es müssen mehr Informationen angelegt werden, als für die Anwendungsfälle benötigt werden.
+
+\vspace{6pt}
+
+\paragraph{Ergebnisse}
+\begin{tabular}{|p{5cm}|p{5cm}|}
+	\hline
+	\textbf{Cassandra} & \textbf{MySQL}\\
+	\hline
+	4500ms & 3500ms\\
+	\hline
+	\textbf{Cassandra} & \textbf{MySQL}\\
+	\hline
+	\textbf{Cassandra} & \textbf{MySQL}\\
+	\hline
+	\textbf{Cassandra} & \textbf{MySQL}\\
+	\hline
+	\textbf{Cassandra} & \textbf{MySQL}\\
+	\hline
+\end{tabular}
+
+Cassandra langsamer wegen Batches?\\
+TEST OHNE BATCHES
+
+%\vspace{12pt}
+\newpage
+
+\subsubsection{Anwendungsfälle}
+Bei den Anwendungsfällen wird auf beiden Datenbanken ein Select ausgeführt, dass die zuvor beschriebenen Ergebnisse in einer Tabelle zurückgibt. Die Statements sehen wie Folgend aus.
+
+\vspace{6pt}
+
+\paragraph{Cassandra}
+\begin{lstlisting}
+SELECT datum, beginn, ende, bezeichnung, typ, dozent, teilnahmestatus FROM stundenplan.student_termine WHERE student_id = <id>
+\end{lstlisting} 
+\begin{lstlisting}
+SELECT datum, beginn, ende, bezeichnung, typ FROM stundenplan.dozent_termine WHERE dozent_id = <id>
+\end{lstlisting} 
+
+\vspace{6pt}
+
+\paragraph{MySQL}
+\begin{lstlisting}
+SELECT Termin.datum, Termin.beginn, Termin.ende, Modul.name, Veranstaltung.typ
+FROM Termin
+JOIN Veranstaltung ON Termin.veranstaltungId = Veranstaltung.veranstaltungId
+JOIN Modul ON Veranstaltung.modulId = Modul.modulId
+WHERE Veranstaltung.dozentId = <dozentId>;
+\end{lstlisting} 
+\begin{lstlisting}
+SELECT Termin.datum, Termin.beginn, Termin.ende, Modul.name, Anwesenheit.fehlgrund, Veranstaltung.typ
+FROM Termin
+JOIN Veranstaltung ON Termin.veranstaltungId = Veranstaltung.veranstaltungId
+JOIN Modul ON Veranstaltung.modulId = Modul.modulId
+JOIN BelegteVeranstaltung ON Veranstaltung.veranstaltungId = BelegteVeranstaltung.veranstaltungId
+JOIN Dozent ON Veranstaltung.dozentId = Dozent.dozentId
+LEFT JOIN Anwesenheit ON BelegteVeranstaltung.matrikelnummer = Anwesenheit.matrikelnummer AND Termin.terminId = Anwesenheit.terminId;
+WHERE BelegteVeranstaltung.matrikelnummer = <matrikelnummer>; 
+\end{lstlisting} 
+
+\vspace{6pt}
+
+\paragraph{Ergebnisse}
+\begin{tabular}{|p{5cm}|p{5cm}|}
+	\hline
+	\textbf{Cassandra} & \textbf{MySQL}\\
+	\hline
+	4500ms & 3500ms\\
+	\hline
+	\textbf{Cassandra} & \textbf{MySQL}\\
+	\hline
+	\textbf{Cassandra} & \textbf{MySQL}\\
+	\hline
+	\textbf{Cassandra} & \textbf{MySQL}\\
+	\hline
+	\textbf{Cassandra} & \textbf{MySQL}\\
+	\hline
+\end{tabular}
