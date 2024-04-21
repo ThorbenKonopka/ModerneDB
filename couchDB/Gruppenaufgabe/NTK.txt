@@ -1,0 +1,11 @@
+{
+  "_id": "76ee891ed52bd004b8b677292a021d0d",
+  "_rev": "1-7e7d70fad8b1f4e41776eb984753a305",
+  "typ": "student",
+  "name": "Konopka",
+  "vorname": "Nils Thorben",
+  "matrikelnummer": "314159",
+  "gruppe": "G-L",
+  "jahrgang": "22",
+  "belegteVeranstaltungen": []
+}

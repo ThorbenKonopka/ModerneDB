@@ -1,0 +1,134 @@
+{
+  "_id": "76ee891ed52bd004b8b677292a000a30",
+  "_rev": "5-b8fb1fc829b69d2fdd22af976c38ec52",
+  "typ": "module",
+  "name": "module",
+  "module": [
+    {
+      "name": "Internetbasierte Anwendungen",
+      "details": {
+        "modulId": "1",
+        "anwesenheitspflichtig": true,
+        "inSemester": "1",
+        "pflichtveranstaltung": true
+      }
+    },
+    {
+      "name": "Grundlagen OO-Programmiersprachen",
+      "details": {
+        "modulId": "2",
+        "anwesenheitspflichtig": "true",
+        "inSemester": "1",
+        "pflichtveranstaltung": "true"
+      }
+    },
+    {
+      "name": "Datenbankgrundlagen",
+      "details": {
+        "modulId": "3",
+        "anwesenheitspflichtig": true,
+        "inSemester": "1",
+        "pflichtveranstaltung": true
+      }
+    },
+    {
+      "name": "Mathematik für Informatiker 1",
+      "details": {
+        "modulId": "4",
+        "anwesenheitspflichtig": true,
+        "inSemester": "1",
+        "pflichtveranstaltung": true
+      }
+    },
+    {
+      "name": "Grundlagen betriebswirtschaftlicher Entscheidungstatbestände",
+      "details": {
+        "modulId": "5",
+        "anwesenheitspflichtig": true,
+        "inSemester": "1",
+        "pflichtveranstaltung": true
+      }
+    },
+    {
+      "name": "Arbeits-, Lern- und Präsentationstechnik 1",
+      "details": {
+        "modulId": "6",
+        "anwesenheitspflichtig": true,
+        "inSemester": "1",
+        "pflichtveranstaltung": true
+      }
+    },
+    {
+      "name": "Englisch 1",
+      "details": {
+        "modulId": "7",
+        "anwesenheitspflichtig": true,
+        "inSemester": "1",
+        "pflichtveranstaltung": true
+      }
+    },
+    {
+      "name": "Algorithmen und Datenstrukturen",
+      "details": {
+        "modulId": "8",
+        "anwesenheitspflichtig": true,
+        "inSemester": "2",
+        "pflichtveranstaltung": true
+      }
+    },
+    {
+      "name": "Fortgeschrittene Konzepte Java",
+      "details": {
+        "modulId": "9",
+        "anwesenheitspflichtig": true,
+        "inSemester": "2",
+        "pflichtveranstaltung": true
+      }
+    },
+    {
+      "name": "Rechnerstrukturen",
+      "details": {
+        "modulId": "10",
+        "anwesenheitspflichtig": true,
+        "inSemester": "2",
+        "pflichtveranstaltung": true
+      }
+    },
+    {
+      "name": "Mathematik für Informatiker 2",
+      "details": {
+        "modulId": "11",
+        "anwesenheitspflichtig": true,
+        "inSemester": "2",
+        "pflichtveranstaltung": true
+      }
+    },
+    {
+      "name": "Grundlagen der Unternehmensführung",
+      "details": {
+        "modulId": "12",
+        "anwesenheitspflichtig": true,
+        "inSemester": "2",
+        "pflichtveranstaltung": true
+      }
+    },
+    {
+      "name": "Arbeits-, Lern- und Präsentationstechnik 2",
+      "details": {
+        "modulId": "13",
+        "anwesenheitspflichtig": true,
+        "inSemester": "2",
+        "pflichtveranstaltung": false
+      }
+    },
+    {
+      "name": "Englisch 2",
+      "details": {
+        "modulId": "14",
+        "anwesenheitspflichtig": true,
+        "inSemester": "2",
+        "pflichtveranstaltung": false
+      }
+    }
+  ]
+}

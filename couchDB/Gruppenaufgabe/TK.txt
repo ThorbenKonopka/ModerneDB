@@ -1,0 +1,14 @@
+{
+  "_id": "76ee891ed52bd004b8b677292a020efd",
+  "_rev": "1-d82424c495f30c39c3d8ca1701bc22d1",
+  "typ": "student",
+  "name": "Königsmann",
+  "vorname": "Thomas",
+  "matrikelnummer": "456789",
+  "gruppe": "A-F",
+  "jahrgang": "23",
+  "belegteVeranstaltungen": [
+    "Internetbasierte Anwendungen",
+    "Datenbankgrundlagen"
+  ]
+}

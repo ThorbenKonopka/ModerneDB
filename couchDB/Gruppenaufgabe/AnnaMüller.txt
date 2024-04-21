@@ -1,0 +1,10 @@
+{
+  "_id": "76ee891ed52bd004b8b677292a022b4e",
+  "_rev": "2-d272a039386fe2e2e7ae3bcc1ac53990",
+  "typ": "dozent",
+  "name": "Müller",
+  "vorname": "Anna",
+  "veranstaltungen": [
+    "Internetbasierte Anwendungen"
+  ]
+}

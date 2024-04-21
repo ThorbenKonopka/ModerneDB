@@ -1,0 +1,13 @@
+{
+  "_id": "5ed5663ada0c0fd7dd81d8dbce12dd59",
+  "_rev": "1-fa1c8e80ada453de1f211a85032f41f1",
+  "typ": "student",
+  "name": "Blauschuh",
+  "vorname": "Bubi",
+  "matrikelnummer": "123456",
+  "gruppe": "A-F",
+  "jahrgang": "23",
+  "belegteVeranstaltungen": [
+    "Internetbasierte Anwendungen"
+  ]
+}

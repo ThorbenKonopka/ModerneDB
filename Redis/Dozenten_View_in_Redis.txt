@@ -1,0 +1,23 @@
+HSET iba23-011023 id "iba23-011023" dozentName "Anna Müller" veranstaltungTyp "Vorlesungen" semester "WS2023/2024" modulName "Internetbasierte Anwendungen" datum "01.10.2023" beginn "08:00" ende "10:00" teilnehmer "iba23T" jahrgang 23
+
+HSET iba23T id "iba23T" "Bubi Blauschuh" "Krank" "Thomas Koenigsmann" "Krank" "Maria Mandarina" "Entschuldigt" "Katrin Kleeblatt" "unentschuldigt"
+
+
+
+Übungen eingereicht
+HSET iba23U-011023 id "iba23" "Bubi Blauschuh" "Nicht abgegeben" "Thomas Koenigsmann" 10 "Maria Mandarina" "Nicht abgegeben" "Katrin Kleeblatt" 5
+(integer) 5
+
+
+Liste: Abfrage Reihenfolge (LPush gefolgt von RPOP)
+LPush iba23Abfrage "Bubi Blauschuh" "Thomas Koenigsmann" "Maria Mandarina" "Katrin Kleeblatt"
+RPOP
+RPOP
+RPOP
+RPOP
+
+Map mit Metadaten
+HSET meta uebung "<modulkuerzel>U<datum>" teilnehmerliste "<modulkuerzel>T" abfrage "<modulkuerzel>Abfrage"
+
+Map mit Modulkürzeln
+HSET modulkuerzel "Internetbasierte Anwendungen" "iba"

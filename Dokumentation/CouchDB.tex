@@ -2,6 +2,79 @@
 
 \section{CouchDB}
 % Hier einmal kurz das Datenbanksystem ansich und die stärken bzw. anwendungsfälle beschreiben, in denen es sich am besten Benutzen lässt bzw. häufig eingesetzt wird.
+CouchDB ist eine dokumentenorientierte NoSQL-Datenbank, die Daten im JSON-Format speichert. Sie bietet eine flexible Datenstrukturierung, was besonders für Anwendungen mit variablen Datenschemata geeignet ist.
+CouchDB kommuniziert über HTTP/REST, wodurch es einfach wird, Webdienste direkt mit der Datenbank zu verbinden.\\
+Als dokumentenorientierte Datenbank ermöglicht CouchDB den Nutzern, komplexe Datenstrukturen in einem einzigen Dokument zu speichern. \\
+Die Indexierung und Abfrage von Daten erfolgt über sogenannte „Views“, die in JavaScript geschrieben werden. Dieses Vorgehen macht CouchDB besonders gut für Webanwendungen und Anwendungen,\\
+die eine hohe Menge an unstrukturierten Daten verarbeiten und/oder allgemein ein schemafreies Vorgehen benötigen.\\
+Die Datenkonsistenz wird dabei durch die Verwendung von MVCC (Multi-Version Concurrency Control) sichergestellt, was Konflikte bei gleichzeitigen Datenänderungen effektiv verwaltet.\\
+Allerdings sind bei CouchDB ausreichende Ressourcen für die Speicherung und Verwaltung der Daten notwendig, und es kann bei sehr großen Datenmengen zu Performance-Einbußen kommen.
+CouchDB ist somit gut für Projekte, bei denen Schemafreiheit steht.
 
 \subsection{Aufgabenstellung}
 % Bitte nicht einfach ein Foto von den Aufgabestellungen einfügen, sondern die Aufgabestellungen etwas abstrahieren und das schreiben, was letztendlich unsere Aufgabe gewesen ist. Bei vielen Aufgaben gabe es durch Königsmann im Nachhinein ergänzungen. DESHALB BITTE NICHT EINFACH STUMPF DIE FOLIE ABSCHREIBEN. Danke :D
+Für diese Datenbank sollte das ursprüngliche relationale Modell in Dokumenten abgebildet werden. Zudem sollten drei Erweiterungen gefunden werden, welche sich für schemafreies Vorgehen eignen.
+Dazu sollten sechs sinnvolle Views und drei sinnvolle Reduce-Funktionen gefunden werden.
+
+\subsubsection{Übertragung der relationalen Datenbank in Dokumente}
+Auch für CouchDB gilt, dass dort im Gegensatz zu relationalen Datenbanken Redundanzen nichts Schlimmes sind. Insofern konnten viele Strukturen, welche in den ursprünglichen Entwurf eingebaut wurden, um Redundanzen
+zu vermeiden und die Konsistenz zu erhalten, einfach "plattgeklopft" werden.
+Bei der Übertragung galten zudem die drei Prämissen:
+\begin{enumerate}
+    \item Redundanzen sind nicht schlimm
+    \item Konsistenzen werden nicht über das Modell abgefangen
+    \item  Da es keine Joins gibt, müssen die Daten entsprechend strukturiert sein
+\end{enumerate}
+In ein JSON-Dokument abgebildet wurden jeweils die Tupel:
+\begin{itemize}
+    \item der drei Tabellen "BelegteVeranstaltung", "D_Jahrgang" und "Student" zu einem Studenten-Dokument
+    \item der sechs Tabellen "D_Typ", "Dozent", "VertretenderDozent", "Veranstaltung", "Modul" und "D_Semester" zu einem Semester-Dokument
+    \item aller Tabellen zu einem semantisch aussagekräftigem Veranstaltung-Dokument
+    \item der Tabelle Modul zu \textbf{einem} Modul-Dokument
+    \item der beiden Tabellen Dozent und Veranstaltung zu einem Dozenten-Dokument
+\end{itemize}
+
+\subsubsection{Erweiterung des Lösung}
+Als sinnvolle Erweiterungen wurden identifiziert:
+\begin{enumerate}
+    \item Nachhalten der Social Points und der zugehörigen Messe, Werbeaktionen, usw.
+    \item Raumnutzungsplan
+    \item Erweiterung der Termininformationen, z.B. Termine für besondere Inhalte vormerken ((Probe)Klausur, Wiederholungstermine,...)
+\end{enumerate}
+
+\subsubsection{Views und Reduce-Funktionen}
+Folgende Views und Reduce-Funktionen wurden umgesetzt:
+\begin{enumerate}
+\item  Alle Studenten der Gruppe A-F
+\item Alle ausgefallenen Termine (zum Nachholen)  mit Reduce-Funktion zur Anzahl der noch nachzuholenden Termine
+\item Alle bislang nicht entschuldigten Fehlzeiten mit Reduce-Funktion zur Anzahl der nicht entschuldigten Fehlzeiten
+\item Alle Studenten  mit Reduce-Funktion zur Anzahl der Studenten
+\item Alle Termine nach Dozenten
+\item Alle Veranstaltungen zu IBA
+\end{enumerate}
+
+\subsubsection{Perfoarmance}
+Mithilfe der Ektorp-Persistence-API wurden Performance-Tests durchhgeführt und mit der ursprüglichen, auf MySQL basierenden Lösung verglichen.
+Für die CRUD-Operationen ergaben sich:
+\begin{itemize}
+    \item  127ms für das Anlegen eines Dokuments
+    \item 61ms für das Lesen eines Dokuments
+    \item 38ms Dokument bearbeiten
+    \item 20ms Dokument löschen
+\end{itemize}
+Im Vergleich ergaben sich folgende Werte (MySQL ggü. CouchDB)
+\begin{itemize}
+    \item   Für das Anlegen von 100 Studenten einzeln: 444ms ggü. 912
+    \item Für das Löschen von 100 Studenten einzeln: 600ms ggü. 1223ms
+    \item Für das Anlegen von 100 Studenten in einem Statement: 20ms ggü 28ms
+    \item Für das Löschen von 100 Studenten in einem Statement: 10ms ggü. 17ms
+\end{itemize}
+\subsubsection{Beobachtungen}
+\begin{enumerate}
+    \item In den Einzeloperationen dauert das Erstellen mit Abstand am längsten
+    \item Bei der Massenoperation dauert das Löschen mir Abstand am längsten
+    \item Im Allgemeinen ist MySQL bzw. dessen Java-Schnittstelle performanter
+    \item Die Schemagebundenheit von MySQL verträgt sich gut mit Javas Klassengebundenheit
+    \item Die Nutzung ist stark Use-Case abhängig, man muss sich anhand der Operationen orientieren
+    \item CouchDB löscht nicht, es markiert als gelöscht
+\end{enumerate}

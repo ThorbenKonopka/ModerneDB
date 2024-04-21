@@ -1,0 +1,38 @@
+{
+  "_id": "76ee891ed52bd004b8b677292a007df1",
+  "_rev": "2-beb5e927e044400706ce82a4f9a879de",
+  "typ": "semester",
+  "name": "WS2023/2024",
+  "veranstaltungen": [
+    {
+      "veranstaltungId": "1",
+      "dozent": {
+        "name": "Müller",
+        "vorname": "Anna"
+      },
+      "typ": "Vorlesungen",
+      "modul": {
+        "modulId": "1",
+        "name": "Internetbasierte Anwendungen",
+        "anwesenheitspflichtig": true,
+        "pflichtveranstaltung": true
+      },
+      "jahrgang": "23"
+    },
+    {
+      "veranstaltungId": "4",
+      "dozent": {
+        "name": "Müller",
+        "vorname": "Anna"
+      },
+      "typ": "Übungen",
+      "modul": {
+        "modulId": "1",
+        "name": "Internetbasierte Anwendungen",
+        "anwesenheitspflichtig": true,
+        "pflichtveranstaltung": true
+      },
+      "jahrgang": "23"
+    }
+  ]
+}

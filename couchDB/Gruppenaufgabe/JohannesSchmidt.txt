@@ -1,0 +1,10 @@
+{
+  "_id": "76ee891ed52bd004b8b677292a0248fa",
+  "_rev": "1-3b27390a6ef0f29ea01fe6f137e895c1",
+  "typ": "dozent",
+  "name": "Schmidt",
+  "vorname": "Johannes",
+  "veranstaltungen": [
+    "Grundlagen OO-Programmiersprachen"
+  ]
+}

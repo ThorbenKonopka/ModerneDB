@@ -1,0 +1,23 @@
+{
+  "_id": "76ee891ed52bd004b8b677292a00d701",
+  "_rev": "1-0d810059b2cdae9ae57808e36c73f763",
+  "typ": "semester",
+  "name": "WS2024/2025",
+  "vranstaltungen": [
+    {
+      "veranstaltungId": "3",
+      "dozent": {
+        "name": "Fischer",
+        "vorname": "Laura"
+      },
+      "typ": "Übungen",
+      "modul": {
+        "modulId": "3",
+        "name": "Datenbankgrundlagen",
+        "anwesenheitspflichtig": true,
+        "pflichtveranstaltung": true
+      },
+      "jahrgang": "25"
+    }
+  ]
+}

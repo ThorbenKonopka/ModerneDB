@@ -1,0 +1,37 @@
+{
+  "_id": "_design/views",
+  "_rev": "22-72e0998e8ee1aa1d979021da6c311ee8",
+  "views": {
+    "alleStudenten": {
+      "map": "function (doc) {\n  if (doc.typ === \"student\") {\n    emit(doc._id, {\n      \"Vorname\": doc.vorname,\n      \"Nachname\": doc.name,\n      \"Matrikelnummer\": doc.matrikelnummer,\n      \"Gruppe\": doc.gruppe,\n      \"Jahrgang\": doc.jahrgang\n    });\n  }\n}\n"
+    },
+    "termine_dozent": {
+      "map": "function (doc) {\n  if (doc.typ && doc.dozent && doc.dozent.name) {\n    emit(doc.dozent.name, {\n      \"typ\": doc.typ,\n      \"datum\": doc.datum,\n      \"beginn\": doc.beginn,\n      \"ende\": doc.ende,\n      \"veranstaltungname\": doc.veranstaltungname,\n      \"gruppe\": doc.gruppe\n    });\n  }\n}\n"
+    },
+    "fehlzeiten": {
+      "map": "function (doc) {\n  if (doc.typ && (doc.typ === 'Vorlesung' || doc.typ === 'Praktikum' || doc.typ === 'Übung') && doc.anwesenheit) {\n    doc.anwesenheit.forEach(function(att) {\n      if (att.matrikelnummer && !att.status) {\n        emit(doc._id, {\n          \"studentName\": att.name,\n          \"matr\": att.matrikelnummer,\n          \"veranstaltung\": doc.veranstaltungname,\n          \"datum\": doc.datum,\n          \"typ\": doc.typ,\n          \"dozent\": doc.dozent.name\n        });\n      }\n    });\n  }\n}\n"
+    },
+    "ausgefallen": {
+      "map": "function (doc) {\n  if (doc.typ && doc.historie && doc.historie.length > 0) {\n    doc.historie.forEach(function(historieEintrag) {\n      if (historieEintrag.aenderungsart === \"Ausfall\") {\n        emit(doc._id, {\n          \"veranstaltungname\": doc.veranstaltungname,\n          \"datum\": doc.datum,\n          \"typ\": doc.typ,\n          \"dozent\": doc.dozent.name,\n          \"gruppe\": doc.gruppe,\n          \"aenderungsdatum\": historieEintrag.aenderungsdatum\n        });\n      }\n    });\n  }\n}\n"
+    },
+    "a-f": {
+      "map": "function (doc) {\n  if (doc.typ === \"student\" && doc.gruppe === \"A-F\") {\n    emit(doc.matrikelnummer, {\n      \"name\": doc.name,\n      \"vorname\": doc.vorname,\n      \"jahrgang\": doc.jahrgang\n    });\n  }\n}\n"
+    },
+    "iba": {
+      "map": "function (doc) {\n  if (doc.typ && (doc.typ === 'Vorlesung' || doc.typ === 'Praktikum' || doc.typ === 'Übung') && doc.veranstaltungname === \"Internetbasierte Anwendungen\") {\n    emit(doc._id, {\n      \"datum\": doc.datum,\n      \"beginn\": doc.beginn,\n      \"ende\": doc.ende,\n      \"dozent\": doc.dozent.name,\n      \"gruppe\": doc.gruppe\n    });\n  }\n}\n"
+    },
+    "alleStudentenAnzahl": {
+      "map": "function (doc) {\n  if (doc.typ === \"student\") {\n    emit(doc._id, {\n      \"Vorname\": doc.vorname,\n      \"Nachname\": doc.name,\n      \"Matrikelnummer\": doc.matrikelnummer,\n      \"Gruppe\": doc.gruppe,\n      \"Jahrgang\": doc.jahrgang\n    });\n  }\n}\n",
+      "reduce": "function (keys, values, rereduce) {\n  if (rereduce) {\n    return sum(values);\n  } else {\n    return values.length;\n  }\n}"
+    },
+    "fehltage_anzahl": {
+      "map": "function (doc) {\n  if (doc.typ && (doc.typ === 'Vorlesung' || doc.typ === 'Praktikum' || doc.typ === 'Übung') && doc.anwesenheit) {\n    doc.anwesenheit.forEach(function(att) {\n      if (att.matrikelnummer && !att.status) {\n        emit(doc._id, {\n          \"studentName\": att.name,\n          \"matr\": att.matrikelnummer,\n          \"veranstaltung\": doc.veranstaltungname,\n          \"datum\": doc.datum,\n          \"typ\": doc.typ,\n          \"dozent\": doc.dozent.name\n        });\n      }\n    });\n  }\n}\n",
+      "reduce": "function (keys, values, rereduce) {\n  if (rereduce) {\n    return sum(values);\n  } else {\n    return values.length;\n  }\n}"
+    },
+    "ausgefallenAnzahl": {
+      "map": "function (doc) {\n  if (doc.typ && doc.historie && doc.historie.length > 0) {\n    doc.historie.forEach(function(historieEintrag) {\n      if (historieEintrag.aenderungsart === \"Ausfall\") {\n        emit(doc._id, {\n          \"veranstaltungname\": doc.veranstaltungname,\n          \"datum\": doc.datum,\n          \"typ\": doc.typ,\n          \"dozent\": doc.dozent.name,\n          \"gruppe\": doc.gruppe,\n          \"aenderungsdatum\": historieEintrag.aenderungsdatum\n        });\n      }\n    });\n  }\n}\n",
+      "reduce": "function (keys, values, rereduce) {\n  if (rereduce) {\n    return sum(values);\n  } else {\n    return values.length;\n  }\n}"
+    }
+  },
+  "language": "javascript"
+}

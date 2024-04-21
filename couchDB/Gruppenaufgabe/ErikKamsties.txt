@@ -1,0 +1,10 @@
+{
+  "_id": "76ee891ed52bd004b8b677292a027d64",
+  "_rev": "1-432a6a29dace946f8e90059a932c55fd",
+  "typ": "dozent",
+  "name": "Kamsties",
+  "vorname": "Erik",
+  "veranstaltungen": [
+    "Betriebssysteme"
+  ]
+}

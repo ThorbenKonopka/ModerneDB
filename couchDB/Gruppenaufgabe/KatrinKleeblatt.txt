@@ -1,0 +1,13 @@
+{
+  "_id": "76ee891ed52bd004b8b677292a01d6ff",
+  "_rev": "2-0ba8bb2ea5df8d05904893b0c586f126",
+  "typ": "student",
+  "name": "Kleeblatt",
+  "vorname": "Katrin",
+  "matrikelnummer": "234567",
+  "gruppe": "G-L",
+  "jahrgang": "25",
+  "belegteVeranstaltungen": [
+    "Grundlagen OO-Programmiersprachen"
+  ]
+}

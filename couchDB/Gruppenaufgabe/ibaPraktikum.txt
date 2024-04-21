@@ -1,0 +1,19 @@
+{
+  "_id": "76ee891ed52bd004b8b677292a01a24a",
+  "_rev": "2-fcef2e9dc9e1fb3290c2ca3516b0e902",
+  "typ": "Praktikum",
+  "datum": "1.10.2025.",
+  "beginn": "08:00:00",
+  "ende": "10:00:00",
+  "veranstaltungname": "Internetbasierte Anwendungen",
+  "dozent": {
+    "name": "Anna Müller"
+  },
+  "gruppe": "A-F",
+  "anwesenheit": [
+    {
+      "matrikelnummer": "456789",
+      "name": "Thomas Königsmann"
+    }
+  ]
+}

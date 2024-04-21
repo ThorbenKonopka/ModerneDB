@@ -1,0 +1,13 @@
+{
+  "_id": "76ee891ed52bd004b8b677292a01fd71",
+  "_rev": "1-15841e06f270b9584b45570d60234d35",
+  "typ": "student",
+  "name": "Griesgram",
+  "vorname": "Grummel",
+  "matrikelnummer": "345678",
+  "gruppe": "G-L",
+  "jahrgang": "24",
+  "belegteVeranstaltungen": [
+    "Datenbankgrundlagen"
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "_id": "76ee891ed52bd004b8b677292a00b6a7",
+  "_rev": "1-e3912d7286c7eb0f6c77523995448d29",
+  "typ": "semester",
+  "name": "SS2024",
+  "veranstaltungen": [
+    {
+      "veranstaltungId": "2",
+      "dozent": {
+        "name": "Schmidt",
+        "vorname": "Johannes"
+      },
+      "typ": "Praktika",
+      "modul": {
+        "modulId": "2",
+        "name": "Grundlagen OO-Programmiersprachen",
+        "anwesenheitspflichtig": true,
+        "pflichtveranstaltung": true
+      },
+      "jahrgang": "24"
+    }
+  ]
+}

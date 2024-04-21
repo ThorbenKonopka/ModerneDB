@@ -1,0 +1,10 @@
+{
+  "_id": "76ee891ed52bd004b8b677292a026810",
+  "_rev": "1-67cac670637a6a2717507d0079cb0762",
+  "typ": "dozent",
+  "name": "Fischer",
+  "vorname": "Laura",
+  "veranstaltungen": [
+    "Datenbankgrundlagen"
+  ]
+}

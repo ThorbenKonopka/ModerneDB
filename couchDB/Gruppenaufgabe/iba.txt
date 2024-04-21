@@ -1,0 +1,33 @@
+{
+  "_id": "76ee891ed52bd004b8b677292a015a57",
+  "_rev": "2-d5b2ef3818d5aebea2ece477f961f818",
+  "typ": "Vorlesung",
+  "datum": "1.10.2023.",
+  "beginn": "08:00:00",
+  "ende": "10:00:00",
+  "veranstaltungname": "Internetbasierte Anwendungen",
+  "dozent": {
+    "name": "Anna Müller"
+  },
+  "gruppe": "A-F",
+  "historie": [
+    {
+      "aenderungsart": "Verschiebung",
+      "aenderungsdatum": "30.9.2023 12:00",
+      "neuesDatum": "2.10.2023.",
+      "neuerBeginn": "08:00:00",
+      "neuesEnde": "10:00:00"
+    }
+  ],
+  "anwesenheit": [
+    {
+      "matrikelnummer": "123456",
+      "name": "Bubi Blauschuh",
+      "status": "anwesend"
+    },
+    {
+      "matrikelnummer": "456789",
+      "name": "Thomas Königsmann"
+    }
+  ]
+}

@@ -1,0 +1,28 @@
+{
+  "_id": "76ee891ed52bd004b8b677292a018636",
+  "_rev": "1-21b0b09f9b9c48c7ecd617824206c405",
+  "typ": "Übung",
+  "datum": "3.10.2024.",
+  "beginn": "14:00:00",
+  "ende": "16:00:00",
+  "veranstaltungname": "Datenbankgrundlagen",
+  "dozent": {
+    "name": "Laura Fischer"
+  },
+  "gruppe": "A-F",
+  "historie": [
+    {
+      "aenderungsart": "Vertretung",
+      "aenderungsdatum": "2.10.2024 12:00",
+      "neuesDatum": "3.10.2024.",
+      "neuerBeginn": "14:00:00",
+      "neuesEnde": "16:00:00"
+    }
+  ],
+  "anwesenheit": [
+    {
+      "matrikelnummer": "345678",
+      "name": "Grummel Griesgram"
+    }
+  ]
+}

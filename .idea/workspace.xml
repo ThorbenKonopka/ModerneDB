@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="dc6b44bd-3458-4bcf-ab94-010957ba1f47" name="Changes" comment="Redis">
+      <change afterPath="$PROJECT_DIR$/couchDB/src/main/java/sem4/moderneDB/Anwesenheit.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/couchDB/src/main/java/sem4/moderneDB/Dozent.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/couchDB/src/main/java/sem4/moderneDB/Historie.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/couchDB/src/main/java/sem4/moderneDB/Main.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/couchDB/src/main/java/sem4/moderneDB/Student.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/couchDB/src/main/java/sem4/moderneDB/Veranstaltung.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Dokumentation/CouchDB.tex" beforeDir="false" afterPath="$PROJECT_DIR$/Dokumentation/CouchDB.tex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Redis/temp.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Redis/Dozenten_View_in_Redis.txt" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <branch-grouping />
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="master" />
+      </map>
+    </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;meierlqrITC&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/meierlqrITC/ModerneDB.git&quot;,
+    &quot;accountId&quot;: &quot;419a630b-c2c3-40c1-b5bc-339275894074&quot;
+  }
+}</component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 6
+}</component>
+  <component name="ProjectId" id="2eoICmILTDnPvTrPVA9O59cOlov" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;dev&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/home/lcm/Studium/Sem4/ModerneDatenbanken/ModerneDB&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.lookFeel&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  }
+}</component>
+  <component name="RunManager">
+    <configuration default="true" type="JetRunConfigurationType">
+      <module name="ModerneDB" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType">
+      <module name="ModerneDB" />
+      <option name="filePath" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-9f38398b9061-18abd8497189-intellij.indexing.shared.core-IU-241.14494.240" />
+        <option value="bundled-js-predefined-1d06a55b98c1-74d2a5396914-JavaScript-IU-241.14494.240" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="dc6b44bd-3458-4bcf-ab94-010957ba1f47" name="Changes" comment="" />
+      <created>1712564379056</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1712564379056</updated>
+      <workItem from="1712564380136" duration="1872000" />
+      <workItem from="1712566265662" duration="670000" />
+      <workItem from="1712579024201" duration="1242000" />
+      <workItem from="1713088289550" duration="1234000" />
+      <workItem from="1713342616809" duration="848000" />
+      <workItem from="1713343475840" duration="17824000" />
+      <workItem from="1713457527648" duration="2454000" />
+      <workItem from="1713506230999" duration="4352000" />
+      <workItem from="1713728140645" duration="5626000" />
+    </task>
+    <task id="LOCAL-00001" summary="Initial Commit">
+      <option name="closed" value="true" />
+      <created>1712564542841</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1712564542841</updated>
+    </task>
+    <task id="LOCAL-00002" summary="Redis">
+      <option name="closed" value="true" />
+      <created>1713382316863</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1713382316863</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="CUSTOM_BOOLEAN_PROPERTIES">
+                <map>
+                  <entry key="Show.Git.Branches" value="true" />
+                </map>
+              </option>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="dev" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Initial Commit" />
+    <MESSAGE value="Redis" />
+    <option name="LAST_COMMIT_MESSAGE" value="Redis" />
+  </component>
+</project>
