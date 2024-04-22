@@ -238,3 +238,8 @@ SELECT DISTINCT Termin.datum, Termin.beginn, Termin.ende, Modul.name, Anwesenhei
 	Dozent: 5-6ms & 3-6ms\\
 	\hline
 \end{tabular}
+
+\vspace{12pt}
+
+\paragraph{Besonderheit}
+Für die Performance-Tests wurden die Datenbank Instanzen als Container über Docker ausgeführt. Dabei wurden 3 Cassandra Instanzen benutzt. Im Treiber wurden alle drei Instanzen als Kontaktpunkte hinzugefügt, sodass der Treiber die möglichkeit hatte, die Last über alle drei Knoten gleichmäßig zu verteilen. Dafür musste lediglich der Port für den Container angepasst werden, weil nicht alle drei Container den gleichen Port belegen können.

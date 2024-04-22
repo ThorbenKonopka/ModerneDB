@@ -114,7 +114,7 @@ CREATE (sj)-[:BELEGT_VERANSTALTUNG]->(Vaf)
 
 CREATE (Java2)-[:HAT]->(Vae)
 CREATE (Java2)-[:HAT]->(Vaf)
-CREATE (h)-[:LEITET]->(Java1)
+CREATE (h)-[:LEITET]->(Java2)
 
 
 
